@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useTransition } from 'react'
 
 
 export const Login = () => {
   const [cpf, setCpf] = useState('');
   const [senha, setSenha] = useState('');
+  const [isPending, startTransition] = useTransition();
 
   const handlechange = (e) => {
     const { name, value } = e.target;
@@ -16,6 +17,9 @@ export const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    startTransition(async () => {
+
+    })
   }
 
   return (
@@ -38,7 +42,9 @@ export const Login = () => {
             placeholder="Senha"
             onChange={handlechange} />
         </div>
-        <button type="submit">Entrar</button>
+
+        <button type="submit" disabled={isPending}>Entrar</button>
+        
       </form>
     </div>
   )
