@@ -1,38 +1,34 @@
-import React, { useEffect, useState, useTransition } from 'react'
+import React, { useState, useTransition } from 'react'
 
 export const Cadastro = () => {
     const [isPeding, startTransition] = useTransition();
     const [formData, setFormData] = useState('');
+    const [error, setError] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        // const [year, month, day] = value.split('-');
         setFormData({ ...formData, [name]: value });
 
     }
-    // useEffect(() => {
-    //     if (date) {
-    //       console.log('Data formatada:', date);
-    //     }
-    //   }, [date]);
 
     const handleSubmit = (e) => {
-        const dataNascTimestamp = new Date(formData.date).getTime();
-        const hojeTimestamp = new Date().now();
-        console.log(dataNascTimestamp, hojeTimestamp)
+        e.preventDefault();
+        const dataNascTimestamp = formData['data-nasc'] ? new Date(formData['data-nasc']) : null;
+        const hojeTimestamp = new Date();
 
         if (dataNascTimestamp > hojeTimestamp) {
-            console.log('A data de nascimento não pode ser maior que a data de hoje.');
+            setError('Data de nascimento inválida');
             return;
+        } else {
+            setError(null);
+            console.log('Enviando dados...');
+            startTransition(async () => {
+                setTimeout(() => {
+                    console.log(formData)
+                }, 2000);
+            })
         }
 
-        e.preventDefault();
-        console.log('Enviando dados...');
-        startTransition(async () => {
-            setTimeout(() => {
-                console.log(formData)
-            }, 2000);
-        })
     }
 
     return (
@@ -73,6 +69,7 @@ export const Cadastro = () => {
                 <button
                     disabled={isPeding}>Cadastrar</button>
             </form>
+            {error && <p>{error}</p>}
         </div>
     )
 }
