@@ -1,4 +1,5 @@
 import React, { useState, useTransition } from 'react'
+import { SecondaryLayout } from '../../components/layout/secondary-layout/secondary-layout';
 
 export const Cadastro = () => {
     const [isPeding, startTransition] = useTransition();
@@ -32,7 +33,7 @@ export const Cadastro = () => {
     }
 
     return (
-        <div>
+        <SecondaryLayout>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="nome">Nome do paciente:</label>
@@ -70,6 +71,6 @@ export const Cadastro = () => {
                     disabled={isPeding}>Cadastrar</button>
             </form>
             {error && <p>{error}</p>}
-        </div>
+        </SecondaryLayout>
     )
 }
