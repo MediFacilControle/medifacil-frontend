@@ -1,7 +1,7 @@
 import React, { useState, useTransition } from 'react'
 import { SecondaryLayout } from '../../components/layout/secondary-layout/secondary-layout';
 
-export const Cadastro = () => {
+export const CadastroPaciente = () => {
     const [isPeding, startTransition] = useTransition();
     const [formData, setFormData] = useState('');
     const [error, setError] = useState(null);
@@ -9,7 +9,6 @@ export const Cadastro = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-
     }
 
     const handleSubmit = (e) => {
