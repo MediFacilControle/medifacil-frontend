@@ -8,4 +8,9 @@ export const ButtonStyle = styled.button`
     color: var(--white);
     width: 100%;
     text-align: center;
+    transition: all .3s;
+
+    &:hover {
+        filter: brightness(1.1);
+    }
 `

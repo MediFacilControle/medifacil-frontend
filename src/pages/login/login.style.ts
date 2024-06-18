@@ -6,7 +6,9 @@ export const LoginContainer = styled.div`
 `
 
 export const LoginForm = styled.form`
-
+    display: grid;
+    gap: 1rem;
+    margin-top: 2rem;
 `
 
 export const ButtonsContainer = styled.div`

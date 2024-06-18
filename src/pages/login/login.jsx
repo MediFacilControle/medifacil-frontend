@@ -4,21 +4,18 @@ import { Input } from '../../components/Input/input';
 import { ButtonsContainer, LoginContainer, LoginForm, LogoContainer } from './login.style.ts';
 import { Button } from '../../components/button/button.jsx';
 import { useNavigate } from 'react-router-dom';
+import { TextField } from '@mui/material';
 
 export const Login = () => {
-  const [cpf, setCpf] = useState('');
-  const [senha, setSenha] = useState('');
+  const [formData, setFormData] = useState('');
   const [isPending, startTransition] = useTransition();
 
   const navigate = useNavigate();
 
   const handlechange = (e) => {
     const { name, value } = e.target;
-    if (name === 'cpf') {
-      setCpf(value);
-    } else {
-      setSenha(value);
-    }
+    setFormData({...formData, [name]: value})
+    console.log(formData);
   }
 
   const handleSubmit = (e) => {
@@ -33,22 +30,24 @@ export const Login = () => {
       <LoginContainer>
         <LoginForm onSubmit={handleSubmit}>
           <div>
-            <Input required
+            <TextField required
               htmlFor={'cpf'}
               label={'CPF'}
               placeholder={'Digite seu CPF'}
               name={'cpf'}
               type={'text'}
+              sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
               onChange={handlechange}
             />
           </div>
           <div>
-            <Input required
+            <TextField required
               htmlFor={'senha'}
               label={'Senha'}
               placeholder={'Digite sua senha'}
               name={'senha'}
               type={'password'}
+              sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
               onChange={handlechange}
             />
           </div>
@@ -60,7 +59,7 @@ export const Login = () => {
 
             <Button
               text={'Cadastro Profissional de Saúde'}
-              onClick={navigate('/cadastro-saude')} />
+              onClick={() => navigate('/cadastro-saude')} />
           </ButtonsContainer>
 
         </LoginForm>
