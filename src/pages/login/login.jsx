@@ -1,14 +1,16 @@
 import React, { useState, useTransition } from 'react'
 import { SecondaryLayout } from '../../components/layout/secondary-layout/secondary-layout';
 import { Input } from '../../components/Input/input';
-import { LoginContainer, LogoContainer } from './login.style.ts';
-import LogoCompleta from '../../assets/logo-completa.png';
+import { ButtonsContainer, LoginContainer, LoginForm, LogoContainer } from './login.style.ts';
 import { Button } from '../../components/button/button.jsx';
+import { useNavigate } from 'react-router-dom';
 
 export const Login = () => {
   const [cpf, setCpf] = useState('');
   const [senha, setSenha] = useState('');
   const [isPending, startTransition] = useTransition();
+
+  const navigate = useNavigate();
 
   const handlechange = (e) => {
     const { name, value } = e.target;
@@ -29,13 +31,9 @@ export const Login = () => {
   return (
     <SecondaryLayout>
       <LoginContainer>
-        <LogoContainer>
-            <img src={LogoCompleta} alt="" />
-            <p>Gerenciamento de receitas médicas</p>
-        </LogoContainer>
-        <form onSubmit={handleSubmit}>
+        <LoginForm onSubmit={handleSubmit}>
           <div>
-            <Input
+            <Input required
               htmlFor={'cpf'}
               label={'CPF'}
               placeholder={'Digite seu CPF'}
@@ -45,7 +43,7 @@ export const Login = () => {
             />
           </div>
           <div>
-            <Input
+            <Input required
               htmlFor={'senha'}
               label={'Senha'}
               placeholder={'Digite sua senha'}
@@ -54,14 +52,18 @@ export const Login = () => {
               onChange={handlechange}
             />
           </div>
+          <ButtonsContainer>
+            <Button
+              type="submit"
+              text={'Entrar'}
+              disabled={isPending} />
 
-          <Button
-            type="submit"
-            text={'Entrar'}
-            color="var(--red)"
-            disabled={isPending} />
+            <Button
+              text={'Cadastro Profissional de Saúde'}
+              onClick={navigate('/cadastro-saude')} />
+          </ButtonsContainer>
 
-        </form>
+        </LoginForm>
       </LoginContainer>
     </SecondaryLayout>
   )
