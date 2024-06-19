@@ -1,7 +1,5 @@
 import { InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import React, { useState } from 'react'
-import { useQuery } from "react-query";
 import { useSearchParams } from "react-router-dom";
 
 
@@ -17,7 +15,7 @@ export const SearchInput = () => {
             size='small'
             sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
             value={search}
-            onChange={e => setSearchParams({ search: e.target.value }, { replace: true })}
+            onChange={e =>  setSearchParams({ search: e.target.value }, { replace: true })}
             InputProps={{
                 endAdornment:
                     <InputAdornment>
