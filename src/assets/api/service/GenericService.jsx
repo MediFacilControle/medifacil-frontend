@@ -1,4 +1,4 @@
-const { HttpRequest } = require('../IHttpClient');
+// const { HttpRequest } = require('../IHttpClient');
 const authApi = require('../AxiosHttpClient');
 
 export class GenericService {
