@@ -1,1 +1,0 @@
-# medifacil-frontend
