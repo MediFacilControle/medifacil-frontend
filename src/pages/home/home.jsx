@@ -7,17 +7,18 @@ import SearchIcon from '@mui/icons-material/Search'
 export const Home = () => {
     return (
         <PrimaryLayout>
-           <HomeContainer>
+            <HomeContainer>
                 <TextField
-                label='Pesquisar paciente'
-                size='small'
-                sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
-                InputProps={{
-                    startAdornment: <InputAdornment position='end'>
-                        <SearchIcon edge='end' />
-                    </InputAdornment>
-                }} />
-           </HomeContainer>
+                    label='Pesquisar paciente'
+                    size='small'
+                    sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
+                    InputProps={{
+                        endAdornment:
+                            <InputAdornment>
+                                <SearchIcon />
+                            </InputAdornment>
+                    }} />
+            </HomeContainer>
         </PrimaryLayout>
     )
 }
