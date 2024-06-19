@@ -5,14 +5,25 @@ export const CardPaciente = () => {
     return (
         <CardPacienteContainer>
             <CardPacienteInfo>
+                <p><span>Nome: </span> Paciente nome tal</p>
 
+                <p><span>Data de Nascimento: </span> dd/MM/aaa</p>
+
+                <p><span>CPF: </span> XXX.XXX.XXX-XX</p>
             </CardPacienteInfo>
 
             <CardPacienteButtons>
                 <Button
-                    color={"var(--turquoise)"}
+                    bgColor={"var(--turquoise)"}
+                    color={"var(--black)"}
                     text={'Ver Receitas'} />
+                <Button
+                    bgColor={"var(--yellow)"}
+                    color={"var(--black)"}
+                    text={'Cadastrar Receita'}
+                    textColor={'var(--black)'} />
             </CardPacienteButtons>
+
         </CardPacienteContainer>
     )
 }

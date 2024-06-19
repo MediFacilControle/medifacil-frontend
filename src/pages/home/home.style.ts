@@ -5,5 +5,7 @@ export const HomeContainer = styled.div`
 `
 
 export const HomeMain = styled.main`
-    
+    margin-top: 2rem;
+    /* display: flex; */
+    gap: 1rem;
 `
