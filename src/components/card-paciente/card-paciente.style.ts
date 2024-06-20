@@ -9,12 +9,17 @@ export const CardPacienteContainer = styled.div`
     border-radius: var(--border-radius);
     margin-bottom: 1rem;
     width: 100%;
-    font-weight: var(--semi-bold);
+    font-weight: var(--medium);
 `
 
 export const SearchContainer = styled.div`
     display: flex;
-    flex: 2 1;
+    gap: 2rem;
+
+    a{
+        width: 30%;
+        text-decoration: none;
+    }
 `
 
 export const CardPacienteInfo = styled.div`

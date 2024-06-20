@@ -1,11 +1,9 @@
 import React, { useState, useTransition } from 'react'
-import { Input } from '../../components/Input/input'
 import { Button } from '../../components/button/button'
-import { SecondaryLayout } from '../../components/layout/secondary-layout/secondary-layout';
 import { CadastroSaudeForm } from './cadastro-saude.style.ts';
 import { ButtonGroup, Fab, TextField } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
-import { GenericService } from '../assets/api/services/GenericService';
+import { GenericService } from '../../assets/api/services/GenericService';
 
 export const CadastroPre = () => {
     const [formData, setFormData] = useState('');
