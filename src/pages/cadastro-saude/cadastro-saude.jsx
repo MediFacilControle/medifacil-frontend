@@ -1,11 +1,10 @@
-import React, { useState, useTransition } from 'react'
-import { Input } from '../../components/Input/input'
+import { useState, useTransition } from 'react'
 import { Button } from '../../components/button/button'
 import { SecondaryLayout } from '../../components/layout/secondary-layout/secondary-layout';
 import { CadastroSaudeForm } from './cadastro-saude.style.ts';
-import { ButtonGroup, Fab, TextField } from '@mui/material';
+import { Fab, TextField } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
-import { GenericService } from '../assets/api/services/GenericService';
+import { GenericService } from '../../assets/api/service/GenericService.jsx';
 
 export const CadastroSaude = () => {
     const [formData, setFormData] = useState('');
@@ -61,7 +60,6 @@ export const CadastroSaude = () => {
                     onChange={handleChange}
                 />
                 <TextField required
-                    htmlFor='crm'
                     label='CRM'
                     placeholder='Digite seu CRM'
                     name='crm'
@@ -70,7 +68,6 @@ export const CadastroSaude = () => {
                     onChange={handleChange}
                 />
                 <TextField required
-                    htmlFor='email'
                     label='Email'
                     placeholder='exemplo@exemplo.com'
                     name='email'
@@ -79,7 +76,6 @@ export const CadastroSaude = () => {
                     onChange={handleChange}
                 />
                 <TextField
-                    htmlFor={'senha'}
                     label={'Senha'}
                     placeholder={'Digite seu senha'}
                     name={'senha'}

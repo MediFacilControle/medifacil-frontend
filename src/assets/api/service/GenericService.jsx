@@ -1,14 +1,11 @@
-// const { HttpRequest } = require('../IHttpClient');
-const authApi = require('../AxiosHttpClient');
+import { authApi } from '../AxiosHttpClient';
 
 export class GenericService {
-  static BASE_URL = "http://localhost:5000";
-
 
   static async findAll(route, params) {
     try {
       const queryString = params.join("&");
-      return await authApi.get(`${this.BASE_URL}/${route}?${queryString}`);
+      return await authApi.get(`/${route}?${queryString}`);
     } catch (e) {
       return e.response;
     }
@@ -16,7 +13,7 @@ export class GenericService {
 
   static async findAllList(list, header) {
     try {
-      return await authApi.get(`${this.BASE_URL}/${list}`, { headers: header });
+      return await authApi.get(`/${list}`, { headers: header });
     } catch (e) {
       return e.response;
     }
@@ -25,7 +22,7 @@ export class GenericService {
   static async findAllListById(ids) {
     try {
       return await authApi.get(
-        `${this.BASE_URL}/list/ids?${ids.map((id) => `ids=${id}`).join("&")}`,
+        `/list/ids?${ids.map((id) => `ids=${id}`).join("&")}`,
       );
     } catch (e) {
       return e.response;
@@ -34,7 +31,7 @@ export class GenericService {
 
   static async filter(params) {
     try {
-      return await authApi.get(`${this.BASE_URL}/filter`, { params });
+      return await authApi.get(`/filter`, { params });
     } catch (e) {
       return e.response;
     }
@@ -42,7 +39,7 @@ export class GenericService {
 
   static async findOne(route, id) {
     try {
-      return await authApi.get(`${this.BASE_URL}/${route}/${id}`);
+      return await authApi.get(`/${route}/${id}`);
     } catch (e) {
       return e.response;
     }
@@ -50,7 +47,7 @@ export class GenericService {
 
   static async create(route, entity, headers) {
     try {
-      return await authApi.post(`${this.BASE_URL}/${route}`, entity, {
+      return await authApi.post(`/${route}`, entity, {
         headers,
       });
     } catch (e) {
@@ -60,7 +57,7 @@ export class GenericService {
 
   static async update(route, entity) {
     try {
-      return await authApi.put(`${this.BASE_URL}/${route}`, entity);
+      return await authApi.put(`/${route}`, entity);
     } catch (e) {
       return e.response;
     }
@@ -68,7 +65,7 @@ export class GenericService {
 
   static async deleteOne(id) {
     try {
-      return await authApi.delete(`${this.BASE_URL}/${id}`);
+      return await authApi.delete(`/${id}`);
     } catch (e) {
       return e.response;
     }
@@ -77,7 +74,7 @@ export class GenericService {
   static async deleteAll(ids) {
     try {
       return await authApi.delete(
-        `${this.BASE_URL}?${ids.map((id) => `ids=${id}`).join("&")}`,
+        `?${ids.map((id) => `ids=${id}`).join("&")}`,
       );
     } catch (e) {
       return e.response;

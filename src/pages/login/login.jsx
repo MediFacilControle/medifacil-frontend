@@ -3,8 +3,8 @@ import { SecondaryLayout } from '../../components/layout/secondary-layout/second
 import { ButtonsContainer, LoginContainer, LoginForm } from './login.style.ts';
 import { Button } from '../../components/button/button.jsx';
 import { useNavigate } from 'react-router-dom';
-import { TextField } from '@mui/material';
-import { GenericService } from '../assets/api/services/GenericService';
+import { Alert, TextField } from '@mui/material';
+import { GenericService } from '../../assets/api/service/GenericService.jsx';
 
 export const Login = () => {
   const [formData, setFormData] = useState('');
@@ -70,6 +70,10 @@ export const Login = () => {
               text={'Cadastro Profissional de Saúde'}
               onClick={() => navigate('/cadastro-saude')} />
           </ButtonsContainer>
+
+          {error ? <Alert severity='error'>
+            {error}
+          </Alert> : null}
 
         </LoginForm>
       </LoginContainer>

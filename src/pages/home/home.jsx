@@ -11,8 +11,11 @@ export const Home = () => {
             <HomeContainer>
                 <SearchContainer>
                     <SearchInput />
-                    <Button
-                        text={'Cadastrar Paciente'} />
+                    <a href="/cadastro-paciente">
+                        <Button
+                            text={'Cadastrar Paciente'}
+                            width={'100%'} />
+                    </a>
                 </SearchContainer>
 
                 <HomeMain>
