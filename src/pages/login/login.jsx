@@ -1,7 +1,6 @@
-import React, { useState, useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { SecondaryLayout } from '../../components/layout/secondary-layout/secondary-layout';
-import { Input } from '../../components/Input/input';
-import { ButtonsContainer, LoginContainer, LoginForm, LogoContainer } from './login.style.ts';
+import { ButtonsContainer, LoginContainer, LoginForm } from './login.style.ts';
 import { Button } from '../../components/button/button.jsx';
 import { useNavigate } from 'react-router-dom';
 import { TextField } from '@mui/material';
