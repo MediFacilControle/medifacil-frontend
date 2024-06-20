@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Login } from "./pages/login/login";
 import { CadastroPaciente } from "./pages/cadastro-paciente/cadastro-paciente";
+import { CadastroReceita } from "./pages/cadastro-receita/cadastro-receita";
 import { CadastroSaude } from "./pages/cadastro-saude/cadastro-saude";
 import { PageNotFound } from "./pages/not-found/not-found";
 import { Home } from "./pages/home/home";

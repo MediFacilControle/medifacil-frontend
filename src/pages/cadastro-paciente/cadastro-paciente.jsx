@@ -1,6 +1,7 @@
 import { useState, useTransition } from 'react'
 import { SecondaryLayout } from '../../components/layout/secondary-layout/secondary-layout';
-import { GenericService } from '../../assets/api/service/GenericService';
+import { GenericService } from '../../assets/api/service/GenericService.jsx';
+import { useNavigate } from 'react-router-dom';
 import { TextField } from '@mui/material';
 import { Button } from '../../components/button/button';
 import { CadastroPacienteContainer } from './cadastro-paciente.style';
@@ -11,6 +12,8 @@ export const CadastroPaciente = () => {
     const [isPeding, startTransition] = useTransition();
     const [formData, setFormData] = useState('');
     const [error, setError] = useState(null);
+
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -30,15 +33,17 @@ export const CadastroPaciente = () => {
             console.log('Enviando dados...');
             startTransition(async () => {
                 try {
-                    const newUser = await GenericService.create('auth/register', formData);
-                    console.log('User created successfully:', newUser);
-                    setFormData({
-                        nome: '',
-                        cpf: '',
-                        birthDate: '',
-                        email: '',
-                        senha: ''
-                    });
+                    const newUser = await GenericService.create('auth/pre-register', formData);
+                    // console.log('User created successfully:', newUser);
+                    if (newUser.status >= 200 && newUser.status < 300) {
+                        if (newUser && newUser.data) {
+                            console.log('User created successfully:', newUser.data);
+                            navigate('/home');
+                        } else {
+                            console.error('Failed to create user. Unexpected response:', newUser);
+                        }
+                    }
+
                 } catch (error) {
                     setError('Error creating user. Please try again.');
                     console.error('Error creating user:', error);
@@ -91,7 +96,6 @@ export const CadastroPaciente = () => {
             </CadastroPacienteContainer>
 
             <ErrorAlert error={error} />
-
         </SecondaryLayout>
     )
 }

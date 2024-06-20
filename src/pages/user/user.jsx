@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { GenericService } from '../assets/api/services/GenericService';
+import { GenericService } from '../../assets/api/service/GenericService.jsx';
 
 const User = ({ roles, fetchType, userId }) => {
     const [users, setUsers] = useState([]);
