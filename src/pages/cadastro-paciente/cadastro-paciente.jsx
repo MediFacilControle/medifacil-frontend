@@ -1,5 +1,6 @@
 import React, { useState, useTransition } from 'react'
 import { SecondaryLayout } from '../../components/layout/secondary-layout/secondary-layout';
+import { GenericService } from '../assets/api/services/GenericService';
 
 export const CadastroPaciente = () => {
     const [isPeding, startTransition] = useTransition();
@@ -23,9 +24,22 @@ export const CadastroPaciente = () => {
             setError(null);
             console.log('Enviando dados...');
             startTransition(async () => {
-                setTimeout(() => {
-                    console.log(formData)
-                }, 2000);
+                try {
+                    const newUser = await GenericService.create('auth/register', formData);
+                    console.log('User created successfully:', newUser);
+                    setFormData({
+                        nome: '',
+                        cpf: '',
+                        // todo
+                        // change to birthDate
+                        birthDate: '',
+                        email: '',
+                        senha: ''
+                    });
+                } catch (error) {
+                    setError('Error creating user. Please try again.');
+                    console.error('Error creating user:', error);
+                }
             })
         }
 

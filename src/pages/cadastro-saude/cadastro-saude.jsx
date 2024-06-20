@@ -5,6 +5,7 @@ import { SecondaryLayout } from '../../components/layout/secondary-layout/second
 import { CadastroSaudeForm } from './cadastro-saude.style.ts';
 import { ButtonGroup, Fab, TextField } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
+import { GenericService } from '../assets/api/services/GenericService';
 
 export const CadastroSaude = () => {
     const [formData, setFormData] = useState('');
@@ -21,7 +22,20 @@ export const CadastroSaude = () => {
         // to do
         e.preventDefault();
         startTransition(async () => {
-
+            try {
+                const newUser = await GenericService.create('auth/register', formData);
+                console.log('User created successfully:', newUser);
+                setFormData({
+                    nome: '',
+                    cpf: '',
+                    crm: '',
+                    email: '',
+                    senha: ''
+                });
+            } catch (error) {
+                setError('Error creating user. Please try again.');
+                console.error('Error creating user:', error);
+            }
         })
     }
     return (
