@@ -34,7 +34,6 @@ export const CadastroPaciente = () => {
             startTransition(async () => {
                 try {
                     const newUser = await GenericService.create('auth/pre-register', formData);
-                    // console.log('User created successfully:', newUser);
                     if (newUser.status >= 200 && newUser.status < 300) {
                         if (newUser && newUser.data) {
                             console.log('User created successfully:', newUser.data);
@@ -56,13 +55,6 @@ export const CadastroPaciente = () => {
         <SecondaryLayout>
             <BackArrow />
             <CadastroPacienteContainer onSubmit={handleSubmit}>
-                <TextField required
-                    label="Nome do Paciente"
-                    type='text'
-                    name='nome'
-                    placeholder='Escreva o nome Completo'
-                    sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
-                    onChange={handleChange} />
 
                 <TextField required
                     label="CPF"
@@ -77,14 +69,6 @@ export const CadastroPaciente = () => {
                     type='date'
                     name='birthDate'
                     InputLabelProps={{ shrink: true }}
-                    sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
-                    onChange={handleChange} />
-
-                <TextField
-                    label="Senha"
-                    type='text'
-                    name='senha'
-                    placeholder='Escreva sua senha '
                     sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
                     onChange={handleChange} />
 
