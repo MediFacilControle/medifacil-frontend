@@ -25,6 +25,11 @@ export const Login = () => {
       try {
         const response = await GenericService.create('auth/login-cpf', formData);
         console.log('User logged successfully:', response);
+        // Store the token in localStorage
+        localStorage.setItem('authToken', response.data.token);
+
+        // Redirect to the home page or another page
+        navigate('/home');
         // todo:
         // store the token
     } catch (error) {
@@ -64,7 +69,8 @@ export const Login = () => {
             <Button
               type="submit"
               text={'Entrar'}
-              disabled={isPending} />
+              disabled={isPending} 
+              />
 
             <Button
               text={'Cadastro Profissional de Saúde'}

@@ -1,6 +1,6 @@
 import React, { useState, useTransition } from 'react'
 import { SecondaryLayout } from '../../components/layout/secondary-layout/secondary-layout';
-import { GenericService } from '../assets/api/services/GenericService';
+import { GenericService } from '../../assets/api/service/GenericService.jsx';
 
 export const CadastroPaciente = () => {
     const [isPeding, startTransition] = useTransition();
@@ -64,9 +64,9 @@ export const CadastroPaciente = () => {
                         onChange={handleChange} />
                 </div>
                 <div>
-                    <label htmlFor="data-nasc">Data de Nascimento:</label>
+                    <label htmlFor="birthDate">Data de Nascimento:</label>
                     <input
-                        name="data-nasc"
+                        name="birthDate"
                         type="date"
                         onChange={handleChange}
                     />

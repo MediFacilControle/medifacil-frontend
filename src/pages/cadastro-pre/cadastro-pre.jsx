@@ -5,7 +5,7 @@ import { SecondaryLayout } from '../../components/layout/secondary-layout/second
 import { CadastroSaudeForm } from './cadastro-saude.style.ts';
 import { ButtonGroup, Fab, TextField } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
-import { GenericService } from '../assets/api/services/GenericService';
+import { GenericService } from '../../assets/api/service/GenericService.jsx';
 
 export const CadastroPre = () => {
     const [formData, setFormData] = useState('');

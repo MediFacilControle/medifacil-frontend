@@ -6,11 +6,14 @@ import { Fab, TextField } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { GenericService } from '../../assets/api/service/GenericService.jsx';
 import { ErrorAlert } from '../../components/error-alert/error-alert.jsx';
+import { useNavigate } from 'react-router-dom';
 
 export const CadastroSaude = () => {
     const [formData, setFormData] = useState('');
     const [error, setError] = useState(null);
     const [isPending, startTransition] = useTransition();
+
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -24,14 +27,16 @@ export const CadastroSaude = () => {
         startTransition(async () => {
             try {
                 const newUser = await GenericService.create('auth/register', formData);
-                console.log('User created successfully:', newUser);
                 setFormData({
                     nome: '',
                     cpf: '',
-                    crm: '',
+                    birthDate: '10/09/2000',
+                    // crm: '',
                     email: '',
                     senha: ''
                 });
+                console.log('User created successfully:', newUser);
+                navigate('/');
             } catch (error) {
                 setError('Error creating user. Please try again.');
                 console.error('Error creating user:', error);
@@ -82,12 +87,13 @@ export const CadastroSaude = () => {
                     name={'senha'}
                     type={'password'}
                     sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
-                    onClick={handleChange}
+                    onChange={handleChange}
                 />
 
                 <Button
-                    disable={isPending}
-                    text={'Cadastrar'} />
+                    disabled={isPending}
+                    text={'Cadastrar'} 
+                    />
             </CadastroSaudeForm>
 
             <ErrorAlert error={error} />

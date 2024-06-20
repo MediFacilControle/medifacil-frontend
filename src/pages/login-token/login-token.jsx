@@ -10,7 +10,7 @@ import {
 import { Button } from "../../components/button/button.jsx";
 import { useNavigate } from "react-router-dom";
 import { TextField } from "@mui/material";
-import { GenericService } from "../assets/api/services/GenericService";
+import { GenericService } from '../../assets/api/service/GenericService.jsx';
 
 export const Login = () => {
   const [formData, setFormData] = useState("");
