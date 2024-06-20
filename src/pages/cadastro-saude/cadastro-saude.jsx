@@ -8,13 +8,7 @@ import { ArrowBack } from '@mui/icons-material';
 import { GenericService } from '../assets/api/services/GenericService';
 
 export const CadastroSaude = () => {
-    const [formData, setFormData] = useState({
-        nome: '',
-        cpf: '',
-        crm: '',
-        email: '',
-        senha: ''
-    });    
+    const [formData, setFormData] = useState('');
     const [error, setError] = useState(null);
     const [isPending, startTransition] = useTransition();
 

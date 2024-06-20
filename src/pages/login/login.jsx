@@ -5,10 +5,12 @@ import { ButtonsContainer, LoginContainer, LoginForm, LogoContainer } from './lo
 import { Button } from '../../components/button/button.jsx';
 import { useNavigate } from 'react-router-dom';
 import { TextField } from '@mui/material';
+import { GenericService } from '../assets/api/services/GenericService';
 
 export const Login = () => {
   const [formData, setFormData] = useState('');
   const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -21,7 +23,15 @@ export const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     startTransition(async () => {
-
+      try {
+        const response = await GenericService.create('auth/login-cpf', formData);
+        console.log('User logged successfully:', response);
+        // todo:
+        // store the token
+    } catch (error) {
+        setError('Error loging user. Please try again.');
+        console.error('Error loging user:', error);
+    }
     })
   }
 
