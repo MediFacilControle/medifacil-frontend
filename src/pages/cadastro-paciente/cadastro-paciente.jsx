@@ -1,7 +1,12 @@
-import React, { useState, useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { SecondaryLayout } from '../../components/layout/secondary-layout/secondary-layout';
 import { GenericService } from '../../assets/api/service/GenericService.jsx';
 import { useNavigate } from 'react-router-dom';
+import { TextField } from '@mui/material';
+import { Button } from '../../components/button/button';
+import { CadastroPacienteContainer } from './cadastro-paciente.style';
+import { ErrorAlert } from '../../components/error-alert/error-alert';
+import { BackArrow } from '../../components/back-arrow/back-arrow';
 
 export const CadastroPaciente = () => {
     const [isPeding, startTransition] = useTransition();
@@ -36,56 +41,61 @@ export const CadastroPaciente = () => {
                             navigate('/home');
                         } else {
                             console.error('Failed to create user. Unexpected response:', newUser);
-                        }   
+                        }
                     }
+
                 } catch (error) {
                     setError('Error creating user. Please try again.');
                     console.error('Error creating user:', error);
                 }
             })
         }
-
     }
 
     return (
         <SecondaryLayout>
-            <form onSubmit={handleSubmit}>
-                {/* <div>
-                    <label htmlFor="nome">Nome do paciente:</label>
-                    <input
-                        name="nome"
-                        type="text"
-                        onChange={handleChange}
-                    />
-                </div> */}
-                <div>
-                    <label htmlFor="cpf">CPF do paciente:</label>
-                    <input
-                        name="cpf"
-                        type="text"
-                        onChange={handleChange} />
-                </div>
-                <div>
-                    <label htmlFor="birthDate">Data de Nascimento:</label>
-                    <input
-                        name="birthDate"
-                        type="date"
-                        onChange={handleChange}
-                    />
-                </div>
-                {/* <div>
-                    <label htmlFor="senha">Senha:</label>
-                    <input
-                        name="senha"
-                        type="password"
-                        onChange={handleChange}
-                    />
-                </div> */}
+            <BackArrow />
+            <CadastroPacienteContainer onSubmit={handleSubmit}>
+                <TextField required
+                    label="Nome do Paciente"
+                    type='text'
+                    name='nome'
+                    placeholder='Escreva o nome Completo'
+                    sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
+                    onChange={handleChange} />
 
-                <button
-                    disabled={isPeding}>Cadastrar</button>
-            </form>
-            {error && <p>{error}</p>}
+                <TextField required
+                    label="CPF"
+                    type='text'
+                    name='cpf'
+                    placeholder='Escreva o CPF completo'
+                    sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
+                    onChange={handleChange} />
+
+                <TextField
+                    label="Data de Nascimento"
+                    type='date'
+                    name='birthDate'
+                    InputLabelProps={{ shrink: true }}
+                    sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
+                    onChange={handleChange} />
+
+                <TextField
+                    label="Senha"
+                    type='text'
+                    name='senha'
+                    placeholder='Escreva sua senha '
+                    sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
+                    onChange={handleChange} />
+
+                <Button
+                    text='Cadastrar'
+                    type='submit'
+                    disabled={isPeding} />
+
+            </CadastroPacienteContainer>
+
+            <ErrorAlert error={error} />
         </SecondaryLayout>
     )
 }

@@ -1,8 +1,9 @@
-import React from 'react'
 import { NavContainer, NavList } from './nav-bar.style.ts'
 import LogoSm from '../../assets/logo-sm.png'
+import { Button } from '../button/button.jsx';
 
 export const Navbar = () => {
+  const isLogged = true;
   return (
     <NavContainer>
       <div>
@@ -11,9 +12,21 @@ export const Navbar = () => {
         </a>
       </div>
       <NavList>
-        <li>Home</li>
-        <li>Receitas</li>
-        <li>Cadastrar Receitas</li>
+        <a href="/home">
+          <li>Home</li>
+        </a>
+        <a href="">
+          <li>Receitas</li>
+        </a>
+        <a href="/cadastro-receita">
+          <li>Cadastrar Receitas</li>
+        </a>
+
+        {isLogged ?
+          <Button
+            width='120px'
+            text='Sair' />
+          : null}
       </NavList>
     </NavContainer>
   )
