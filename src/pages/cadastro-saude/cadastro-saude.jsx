@@ -5,6 +5,7 @@ import { CadastroSaudeForm } from './cadastro-saude.style.ts';
 import { Fab, TextField } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { GenericService } from '../../assets/api/service/GenericService.jsx';
+import { ErrorAlert } from '../../components/error-alert/error-alert.jsx';
 
 export const CadastroSaude = () => {
     const [formData, setFormData] = useState('');
@@ -88,6 +89,9 @@ export const CadastroSaude = () => {
                     disable={isPending}
                     text={'Cadastrar'} />
             </CadastroSaudeForm>
+
+            <ErrorAlert error={error} />
+
         </SecondaryLayout>
     )
 }
