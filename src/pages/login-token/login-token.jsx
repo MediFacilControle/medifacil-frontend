@@ -33,9 +33,16 @@ export const Login = () => {
           "auth/login-token",
           formData
         );
-        console.log("User logged successfully:", response);
-        // todo:
-        // store the token
+        if (response.status >= 200 && response.status < 300) {
+          if (response.data && response.data.token) {
+            console.log('User logged successfully:', response.data);
+            localStorage.setItem('authToken', response.data.token);
+            // para logar pelo token
+            navigate('/home');
+          } else {
+            console.error('Unexpected response format:', response);
+          }
+        }
       } catch (error) {
         setError("Error loging user. Please try again.");
         console.error("Error loging user:", error);

@@ -1,11 +1,14 @@
 import React, { useState, useTransition } from 'react'
 import { SecondaryLayout } from '../../components/layout/secondary-layout/secondary-layout';
 import { GenericService } from '../../assets/api/service/GenericService.jsx';
+import { useNavigate } from 'react-router-dom';
 
 export const CadastroPaciente = () => {
     const [isPeding, startTransition] = useTransition();
     const [formData, setFormData] = useState('');
     const [error, setError] = useState(null);
+
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -25,17 +28,16 @@ export const CadastroPaciente = () => {
             console.log('Enviando dados...');
             startTransition(async () => {
                 try {
-                    const newUser = await GenericService.create('auth/register', formData);
-                    console.log('User created successfully:', newUser);
-                    setFormData({
-                        nome: '',
-                        cpf: '',
-                        // todo
-                        // change to birthDate
-                        birthDate: '',
-                        email: '',
-                        senha: ''
-                    });
+                    const newUser = await GenericService.create('auth/pre-register', formData);
+                    // console.log('User created successfully:', newUser);
+                    if (newUser.status >= 200 && newUser.status < 300) {
+                        if (newUser && newUser.data) {
+                            console.log('User created successfully:', newUser.data);
+                            navigate('/home');
+                        } else {
+                            console.error('Failed to create user. Unexpected response:', newUser);
+                        }   
+                    }
                 } catch (error) {
                     setError('Error creating user. Please try again.');
                     console.error('Error creating user:', error);
@@ -48,14 +50,14 @@ export const CadastroPaciente = () => {
     return (
         <SecondaryLayout>
             <form onSubmit={handleSubmit}>
-                <div>
+                {/* <div>
                     <label htmlFor="nome">Nome do paciente:</label>
                     <input
                         name="nome"
                         type="text"
                         onChange={handleChange}
                     />
-                </div>
+                </div> */}
                 <div>
                     <label htmlFor="cpf">CPF do paciente:</label>
                     <input
@@ -71,14 +73,14 @@ export const CadastroPaciente = () => {
                         onChange={handleChange}
                     />
                 </div>
-                <div>
+                {/* <div>
                     <label htmlFor="senha">Senha:</label>
                     <input
                         name="senha"
                         type="password"
                         onChange={handleChange}
                     />
-                </div>
+                </div> */}
 
                 <button
                     disabled={isPeding}>Cadastrar</button>

@@ -24,18 +24,20 @@ export const Login = () => {
     startTransition(async () => {
       try {
         const response = await GenericService.create('auth/login-cpf', formData);
-        console.log('User logged successfully:', response);
-        // Store the token in localStorage
-        localStorage.setItem('authToken', response.data.token);
-
-        // Redirect to the home page or another page
-        navigate('/home');
-        // todo:
-        // store the token
-    } catch (error) {
-        setError('Error loging user. Please try again.');
-        console.error('Error loging user:', error);
-    }
+        if (response.status >= 200 && response.status < 300) {
+          if (response.data && response.data.token) {
+            console.log('User logged successfully:', response.data);
+            localStorage.setItem('authToken', response.data.token);
+            // console.log('Token:', response.data.token);
+            navigate('/home');
+          } else {
+            console.error('Unexpected response format:', response);
+          }
+        }
+      } catch (error) {
+          setError('Error loging user. Please try again.');
+          console.error('Error loging user:', error);
+      } 
     })
   }
 
@@ -59,7 +61,7 @@ export const Login = () => {
               htmlFor={'senha'}
               label={'Senha'}
               placeholder={'Digite sua senha'}
-              name={'senha'}
+              name={'password'}
               type={'password'}
               sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
               onChange={handlechange}

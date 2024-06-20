@@ -27,16 +27,14 @@ export const CadastroSaude = () => {
         startTransition(async () => {
             try {
                 const newUser = await GenericService.create('auth/register', formData);
-                setFormData({
-                    nome: '',
-                    cpf: '',
-                    birthDate: '10/09/2000',
-                    // crm: '',
-                    email: '',
-                    senha: ''
-                });
-                console.log('User created successfully:', newUser);
-                navigate('/');
+                if (newUser.status >= 200 && newUser.status < 300) {
+                    if (newUser && newUser.data) {
+                        console.log('User created successfully:', newUser.data);
+                        navigate('/');
+                    } else {
+                        console.error('Failed to create user. Unexpected response:', newUser);
+                    }   
+                }
             } catch (error) {
                 setError('Error creating user. Please try again.');
                 console.error('Error creating user:', error);
@@ -84,7 +82,7 @@ export const CadastroSaude = () => {
                 <TextField
                     label={'Senha'}
                     placeholder={'Digite seu senha'}
-                    name={'senha'}
+                    name={'password'}
                     type={'password'}
                     sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
                     onChange={handleChange}
