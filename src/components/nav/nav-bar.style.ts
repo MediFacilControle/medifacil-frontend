@@ -11,6 +11,8 @@ export const NavList = styled.ul`
     display: flex;
     gap: 1rem;
 
+    a{all: unset;}
+
     li {
         list-style: none;
         padding: 1rem;
