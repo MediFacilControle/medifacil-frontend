@@ -15,3 +15,15 @@ export const CadastroReceitaForm = styled.form`
     margin: 0 auto;
     width: 500px;
 `
+
+export const CadastroRemedioForm = styled.form`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    div{
+        display: flex;
+        justify-content: space-between;
+    }
+`
