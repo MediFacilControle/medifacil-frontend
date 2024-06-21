@@ -4,6 +4,7 @@ import { Button } from "../../components/button/button"
 import { useState } from "react";
 import PropTypes from 'prop-types';
 import { useSearchParams } from "react-router-dom";
+import { GenericService } from "../../assets/api/service/GenericService.js";
 
 const style = {
     position: 'absolute',
@@ -21,54 +22,52 @@ const style = {
     borderRadius: 'var(--border-radius)',
 }
 
-const formData = {
-    name: "Minha Receita22",
-    data_expiration: "2025-12-31",
-    pacient: "666f0a9a003fe13a87ea2a14",
-    medicines: [
-        {
-            medicine: "666f1975d1634d8060239bfc",
-            usage_duration: 2,
-            usage_interval: "8 hours",
-            treatment_start: "2024-11-31",
-            next_dose: "2024-12-01",
-            link_photo: "http://linkparafoto.com/medicine1.jpg",
-            new_photo: "base64",
-            quantity: "3 comprimidos"
-        },
-        {
-            medicine: "666f1975d1634d80602393f6",
-            usage_duration: 2,
-            usage_interval: "8 hours",
-            treatment_start: "2024-11-31",
-            next_dose: "2024-12-01",
-            link_photo: "http://linkparafoto.com/medicine1.jpg",
-            new_photo: "base64",
-            quantity: "3 comprimidos"
-        }
-    ]
-};
-
-export const RenderModal = ({ handleClose, open, ...props }) => {
+export const RenderModal = ({ handleClose, open }) => {
     const [formData, setFormData] = useState('');
     const [inputValue, setInputValue] = useState('');
     const [value, setValue] = useState('');
+    const [remedio, setRemedio] = useState([]);
 
-    const [searchParams, setSearchParams] = useSearchParams({
-        nome_produto: '',
-    });
-    const nome_produto = searchParams.get('nome_produto');
+
+    // const [searchParams, setSearchParams] = useSearchParams({
+    //     nome_produto: '',
+    // });
+
+
+    const fetchMedicamento = async () => {
+        try {
+            const medicamento = await GenericService.findAll('api/medicine/get-medicines-by-name', `nome_produto=${inputValue}`);
+            if (medicamento) {
+                if (medicamento && medicamento.data) {
+                    console.log('Medicamento fetched successfully:', medicamento.data);
+                    setRemedio(medicamento.data);
+                }
+            }
+        } catch (error) {
+            throw new Error('Erro ao buscar medicamento. Por favor, tente novamente.');
+        }
+
+    }
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
         console.log(formData);
     }
+    const handleInputValue = (event, newInputValue) => {
+        event.preventDefault();
+        setInputValue(newInputValue);
+        fetchMedicamento();
+    }
 
-    const handleNewInput = (e) => {
-        setInputValue(e.target.value);
-        setSearchParams({ nome_produto: e.target.value }, { replace: true })
-        console.log(inputValue);
+    const handleValue = (event, newValue) => {
+        setValue(newValue);
+        console.log(value);
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log('Enviando dados...');
     }
 
     return (
@@ -84,25 +83,25 @@ export const RenderModal = ({ handleClose, open, ...props }) => {
                 </Typography>
 
                 <Autocomplete
-                    value={value}
-                    onChange={(event, newValue) => {
-                      setValue(newValue);
-                    }}
                     defaultValue={''}
-                    inputValue={nome_produto}
-                    onInputChange={handleNewInput}
-                    options={['Medicamento 1', 'Medicamento 2', 'Medicamento 3']}
+                    value={value}
+                    onChange={handleValue}
+                    inputValue={inputValue}
+                    onInputChange={handleInputValue}
+                    options={remedio}
                     sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
                     renderInput={(params) => <TextField {...params} label="Nome do Medicamento" />} />
 
                 <Typography id="modal-modal-title" variant="h6" component="h2" sx={'text-decoration: underline'}>
                     Informações adicionais
                 </Typography>
+
                 <p>Nome do medicamento: PACO</p>
                 <p>Princípio ativo: Paracetamol + Fosfato de Codeína</p>
                 <p>Administração: VIA ORAL</p>
                 <p>Fabricante: Eurofarma Laboratórios S.A</p>
                 <p>Categoria: Genérico</p>
+
                 <CadastroRemedioForm>
                     <div>
                         <TextField

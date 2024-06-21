@@ -5,12 +5,12 @@ import { Button } from "../../components/button/button.jsx"
 import { BackArrow } from "../../components/back-arrow/back-arrow.jsx"
 import { useState, useTransition } from "react"
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useNavigate } from "react-router-dom"
-import { GenericService } from "../../assets/api/service/GenericService.jsx"
+import { useNavigate, useSearchParams } from "react-router-dom"
+import { GenericService } from "../../assets/api/service/GenericService.js"
 import { RenderModal } from "./receita-modal.jsx"
 
 
-function renderItem({ item, handleRemoveFruit }) {
+function renderItem({ item, handleRemoveMed }) {
     return (
         <ListItem
             secondaryAction={
@@ -18,7 +18,7 @@ function renderItem({ item, handleRemoveFruit }) {
                     edge="end"
                     aria-label="delete"
                     title="Delete"
-                    onClick={() => handleRemoveFruit(item)}
+                    onClick={() => handleRemoveMed(item)}
                 >
                     <DeleteIcon />
                 </IconButton>
@@ -30,11 +30,18 @@ function renderItem({ item, handleRemoveFruit }) {
 }
 
 export const CadastroReceita = () => {
-    const [isPeding, startTransition] = useTransition();
+    const [isPending, startTransition] = useTransition();
     const [formData, setFormData] = useState('');
-    const [error, setError] = useState(null);
-
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState(null);
+    const [inputValue, setInputValue] = useState('');
     const navigate = useNavigate();
+    const [remedios, setRemedios] = useState([]);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -44,12 +51,9 @@ export const CadastroReceita = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setError(null);
         console.log('Enviando dados...');
         startTransition(async () => {
             try {
-
-
                 const newReceita = await GenericService.create('api/recipe/register-recipe', formData);
                 if (newReceita.status >= 200 && newReceita.status < 300) {
                     if (newReceita && newReceita.data) {
@@ -60,23 +64,10 @@ export const CadastroReceita = () => {
                     }
                 }
             } catch (error) {
-                setError('Error creating user. Please try again.');
-                console.error('Error creating user:', error);
+                throw new Error('Erro no cadastro da receita. Por favor, tente novamente.');
             }
         })
     }
-
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
-    const [inputValue, setInputValue] = useState('');
-
-    const [medicamento, setMedicamento] = useState([]);
-
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => {
-        setOpen(false);
-    
-    };
 
     return (
         <PrimaryLayout>
@@ -118,3 +109,4 @@ export const CadastroReceita = () => {
         </PrimaryLayout>
     )
 }
+
