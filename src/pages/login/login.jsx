@@ -96,7 +96,7 @@
 //   )
 // }
 
-import React, { useState, useTransition, useContext } from 'react';
+import { useState, useTransition, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, TextField } from '@mui/material';
 import { SecondaryLayout } from '../../components/layout/secondary-layout/secondary-layout';
@@ -113,11 +113,11 @@ export const Login = () => {
   // const { Login } = useContext(AuthContext); // Use corretamente o useContext com AuthContext
   // const { Login } = useContext(AuthContext);
   // const { login } = useContext(AuthContext);
-//   const [formData., setLoginData] = useState<UserLogin>({
-//     cpf: '',
-//     password: ''
-// });
-  const { Login, Logout } = useContext(AuthContext);
+  //   const [formData., setLoginData] = useState<UserLogin>({
+  //     cpf: '',
+  //     password: ''
+  // });
+  const { UserLogin } = useContext(AuthContext);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -129,7 +129,10 @@ export const Login = () => {
     startTransition(async () => {
       try {
         // const user = { cpf: formData.cpf, password: formData.password };
-        const response = await Login({ cpf: formData.cpf, password: formData.password });
+        const response = await UserLogin({
+          cpf: formData.cpf,
+          password: formData.password
+        });
         // const response = await Login(formData); // Chame a função Login do contexto com os dados do formulário
         console.log('signed:', response);
         if (response.statusCode === 200 && response.body && response.body.token) {
@@ -152,7 +155,7 @@ export const Login = () => {
       <LoginContainer>
         <LoginForm onSubmit={handleSubmit}>
           <div>
-            <TextField 
+            <TextField
               required
               htmlFor={'cpf'}
               label={'CPF'}
@@ -164,7 +167,7 @@ export const Login = () => {
             />
           </div>
           <div>
-            <TextField 
+            <TextField
               required
               htmlFor={'senha'}
               label={'Senha'}
@@ -179,11 +182,11 @@ export const Login = () => {
             <Button
               type="submit"
               text={'Entrar'}
-              disabled={isPending} 
+              disabled={isPending}
             />
             <Button
               text={'Cadastro Profissional de Saúde'}
-              onClick={() => navigate('/cadastro-saude')} 
+              onClick={() => navigate('/cadastro-saude')}
             />
           </ButtonsContainer>
 

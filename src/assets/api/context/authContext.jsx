@@ -231,9 +231,10 @@
 //     );
 // };
 
-import React, { createContext, useState } from 'react';
+import { createContext, useState } from 'react';
 import { GenericService } from '../service/GenericService';
 import { authApi } from '../AxiosHttpClient';
+import PropTypes from 'prop-types';
 
 export const AuthContext = createContext(null);
 
@@ -241,7 +242,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isLogged, setIsLogged] = useState(false);
 
-    const Login = async ({ cpf, password }) => {
+    const UserLogin = async ({ cpf, password }) => {
         try {
             const client = new authApi(); // Configure seu cliente Axios aqui
             const response = await GenericService.create('auth/login-cpf', { cpf, password }, client);
@@ -266,11 +267,14 @@ export const AuthProvider = ({ children }) => {
         alert('Logged out successfully!'); // Exibe um alerta informando que o logout foi feito com sucesso
     };
 
-    // Aqui você pode adicionar outras funções relacionadas à autenticação, se necessário
 
     return (
-        <AuthContext.Provider value={{ user, Login, Logout, isLogged }}>
+        <AuthContext.Provider value={{ user, UserLogin, Logout, isLogged }}>
             {children}
         </AuthContext.Provider>
     );
+};
+
+AuthProvider.propTypes = {
+    children: PropTypes.node.isRequired,
 };
