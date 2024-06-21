@@ -3,12 +3,14 @@ import { authApi } from '../AxiosHttpClient';
 export class GenericService {
 
   static async findAll(route, params) {
+    console.log(authApi.defaults)
     try {
-      const queryString = params.join("&");
-      return await authApi.get(`/${route}?${queryString}`);
-    } catch (e) {
-      return e.response;
+      return await authApi.get(`${route}?${params}`);
+
+    } catch (error) {
+      return error.response;
     }
+
   }
 
   static async findAllList(list, header) {
