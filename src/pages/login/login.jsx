@@ -1,108 +1,10 @@
-// import { useState, useTransition } from 'react'
-// import { SecondaryLayout } from '../../components/layout/secondary-layout/secondary-layout';
-// import { ButtonsContainer, LoginContainer, LoginForm } from './login.style.ts';
-// import { Button } from '../../components/button/button.jsx';
-// import { useNavigate } from 'react-router-dom';
-// import { Alert, TextField } from '@mui/material';
-// import { GenericService } from '../../assets/api/service/GenericService.jsx';
-// import { AuthProvider } from '../../assets/api/context/authContext.jsx';
-
-// export const Login = () => {
-//   const [formData, setFormData] = useState('');
-//   const [isPending, startTransition] = useTransition();
-//   const [error, setError] = useState(null);
-
-//   const navigate = useNavigate();
-
-//   const handlechange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData({...formData, [name]: value})
-//     console.log(formData);
-//   }
-
-//   const { Login: login } = useContext(AuthProvider);
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     startTransition(async () => {
-//       const user = { cpf, password };
-//       const response = await login(user);
-//       console.log("signed: " + signed);
-//       console.log("response: " + response);
-//       try {
-//         const response = await GenericService.create('auth/login-cpf', formData);
-//         if (response.status >= 200 && response.status < 300) {
-//           if (response.data && response.data.token) {
-//             console.log('User logged successfully:', response.data);
-//             localStorage.setItem('authToken', response.data.token);
-//             // console.log('Token:', response.data.token);
-//             navigate('/home');
-//           } else {
-//             console.error('Unexpected response format:', response);
-//           }
-//         }
-//       } catch (error) {
-//           setError('Error loging user. Please try again.');
-//           console.error('Error loging user:', error);
-//       } 
-//     })
-//   }
-
-//   return (
-//     <SecondaryLayout>
-//       <LoginContainer>
-//         <LoginForm onSubmit={handleSubmit}>
-//           <div>
-//             <TextField required
-//               htmlFor={'cpf'}
-//               label={'CPF'}
-//               placeholder={'Digite seu CPF'}
-//               name={'cpf'}
-//               type={'text'}
-//               sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
-//               onChange={handlechange}
-//             />
-//           </div>
-//           <div>
-//             <TextField required
-//               htmlFor={'senha'}
-//               label={'Senha'}
-//               placeholder={'Digite sua senha'}
-//               name={'password'}
-//               type={'password'}
-//               sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
-//               onChange={handlechange}
-//             />
-//           </div>
-//           <ButtonsContainer>
-//             <Button
-//               type="submit"
-//               text={'Entrar'}
-//               disabled={isPending} 
-//               />
-
-//             <Button
-//               text={'Cadastro Profissional de Saúde'}
-//               onClick={() => navigate('/cadastro-saude')} />
-//           </ButtonsContainer>
-
-//           {error ? <Alert severity='error'>
-//             {error}
-//           </Alert> : null}
-
-//         </LoginForm>
-//       </LoginContainer>
-//     </SecondaryLayout>
-//   )
-// }
-
 import { useState, useTransition, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { Alert, TextField } from '@mui/material';
 import { SecondaryLayout } from '../../components/layout/secondary-layout/secondary-layout';
 import { ButtonsContainer, LoginContainer, LoginForm } from './login.style.ts';
 import { Button } from '../../components/button/button.jsx';
-import { AuthContext } from '../../assets/api/context/authContext.jsx'; // Verifique o caminho do seu contexto
+import { AuthContext } from '../../assets/api/context/authContext.jsx';
 
 export const Login = () => {
   const [formData, setFormData] = useState({ cpf: '', password: '' });
@@ -110,7 +12,7 @@ export const Login = () => {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
-  const { UserLogin } = useContext(AuthContext);
+  const { UserLogin, isLogged } = useContext(AuthContext);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -127,20 +29,20 @@ export const Login = () => {
           password: formData.password
         });
         console.log('login response:', response);
-        if (response.status === 200 && response.data.token) {
-          console.log('User logged successfully:', response);
+        if ((response.status === 200 || response.status === 204) && response.data.token) {
+          console.log('User logado com sucesso', response);
           navigate('/home');
         } else {
-          console.error('Unexpected response format:', response);
-          setError('Error logging in user. Please try again.');
+          setError('Erro ao logar o usuário. Tente novamente.');
         }
       } catch (error) {
-        console.error('Error logging in user:', error);
-        setError('Error logging in user. Please try again.');
+        console.error('Erro ao logar o usuário:', error);
+        setError('Erro ao logar o usuário. Tente novamente.');
       }
     });
   };
 
+  if (isLogged) return <Navigate to={'/home'} />;
   return (
     <SecondaryLayout>
       <LoginContainer>
@@ -178,6 +80,10 @@ export const Login = () => {
             <Button
               text={'Cadastro Profissional de Saúde'}
               onClick={() => navigate('/cadastro-saude')}
+            />
+            <Button
+              text={'teste'}
+              onClick={() => console.log(isLogged)}
             />
           </ButtonsContainer>
 
