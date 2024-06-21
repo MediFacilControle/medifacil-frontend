@@ -110,13 +110,6 @@ export const Login = () => {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
-  // const { Login } = useContext(AuthContext); // Use corretamente o useContext com AuthContext
-  // const { Login } = useContext(AuthContext);
-  // const { login } = useContext(AuthContext);
-  //   const [formData., setLoginData] = useState<UserLogin>({
-  //     cpf: '',
-  //     password: ''
-  // });
   const { UserLogin } = useContext(AuthContext);
 
   const handleChange = (e) => {
@@ -125,19 +118,17 @@ export const Login = () => {
   };
 
   const handleSubmit = (e) => {
+    console.log('formData:', formData);
     e.preventDefault();
     startTransition(async () => {
       try {
-        // const user = { cpf: formData.cpf, password: formData.password };
         const response = await UserLogin({
           cpf: formData.cpf,
           password: formData.password
         });
-        // const response = await Login(formData); // Chame a função Login do contexto com os dados do formulário
-        console.log('signed:', response);
-        if (response.statusCode === 200 && response.body && response.body.token) {
-          console.log('User logged successfully:', response.body);
-          localStorage.setItem('authToken', response.body.token);
+        console.log('login response:', response);
+        if (response.status === 200 && response.data.token) {
+          console.log('User logged successfully:', response);
           navigate('/home');
         } else {
           console.error('Unexpected response format:', response);

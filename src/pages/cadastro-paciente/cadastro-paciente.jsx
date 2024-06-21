@@ -1,6 +1,6 @@
 import { useState, useTransition } from 'react'
 import { SecondaryLayout } from '../../components/layout/secondary-layout/secondary-layout';
-import { GenericService } from '../../assets/api/service/GenericService.jsx';
+import { GenericService } from '../../assets/api/service/GenericService.js';
 import { useNavigate } from 'react-router-dom';
 import { TextField } from '@mui/material';
 import { Button } from '../../components/button/button';

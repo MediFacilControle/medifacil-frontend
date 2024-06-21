@@ -4,7 +4,7 @@ import { SecondaryLayout } from '../../components/layout/secondary-layout/second
 import { CadastroSaudeForm } from './cadastro-saude.style.ts';
 import { Fab, TextField } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
-import { GenericService } from '../../assets/api/service/GenericService.jsx';
+import { GenericService } from '../../assets/api/service/GenericService.js';
 import { ErrorAlert } from '../../components/error-alert/error-alert.jsx';
 import { useNavigate } from 'react-router-dom';
 
