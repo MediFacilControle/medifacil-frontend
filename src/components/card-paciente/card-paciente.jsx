@@ -1,8 +1,15 @@
 import { CardPacienteButtons, CardPacienteContainer, CardPacienteInfo } from './card-paciente.style.ts'
 import { Button } from '../button/button.jsx'
 import PropTypes from 'prop-types'
-
+import { useFetchClientRecipes } from '../../hooks/useFetchClientRecipes.js';
+// import { AuthContext } from '../../assets/api/context/authContext.jsx';
+// import { useContext } from 'react';
 export const CardPaciente = ({ name, birthDate, cpf }) => {
+    // const { idUser } = useContext(AuthContext);
+    // console.log(idUser);
+    const { recipe } = useFetchClientRecipes('api/recipe/get-recipes');
+    console.log(recipe);
+
     return (
         <CardPacienteContainer>
             <CardPacienteInfo>
@@ -17,7 +24,9 @@ export const CardPaciente = ({ name, birthDate, cpf }) => {
                 <Button
                     bgColor={"var(--turquoise)"}
                     color={"var(--black)"}
-                    text={'Ver Receitas'} />
+                    text={'Ver Receitas'} 
+                    // recipes={recipes}
+                    />
                 <Button
                     bgColor={"var(--yellow)"}
                     color={"var(--black)"}

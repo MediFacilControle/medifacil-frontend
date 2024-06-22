@@ -29,7 +29,7 @@ export const Home = () => {
                             birthDate={moment(user.birthDate).format('DD/MM/YYYY')}
                             cpf={user.cpf}
                             key={user.id}>
-                                
+
                             </CardPaciente>
                         )
                     })}
