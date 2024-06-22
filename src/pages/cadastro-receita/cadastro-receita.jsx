@@ -36,8 +36,9 @@ export const CadastroReceita = () => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const [remedio, setRemedio] = useState([]);
-    const { users, isLoading, error } = useFetchUsers('api/user/');
     
+    const { users, isLoading, error } = useFetchUsers('api/user/');
+
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
