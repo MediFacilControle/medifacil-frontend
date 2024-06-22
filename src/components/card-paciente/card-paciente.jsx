@@ -2,8 +2,14 @@ import { CardPacienteButtons, CardPacienteContainer, CardPacienteInfo } from './
 import { Button } from '../button/button.jsx'
 import PropTypes from 'prop-types'
 import { useFetchClientRecipes } from '../../hooks/useFetchClientRecipes.js';
+import { useFetchPacientRecipes } from '../../hooks/useFetchPacientRecipes.js';
+
 export const CardPaciente = ({ name, birthDate, cpf, id }) => {
+    // para pegar todos as receitas relacionado ao médico (pessoa logada)
     const { recipe } = useFetchClientRecipes('api/recipe/get-recipes');
+    // para pegar todas as receitas do paciente (independente de quem preescreveu)
+    const { recipePacient } = useFetchPacientRecipes('api/recipe/get-user-recipe', id);
+    console.log(recipePacient)
     console.log(recipe);
 
     return (
@@ -22,6 +28,7 @@ export const CardPaciente = ({ name, birthDate, cpf, id }) => {
                     bgColor={"var(--turquoise)"}
                     color={"var(--black)"}
                     text={'Ver Receitas'} 
+
                     // recipes={recipe}
                     />
                 <Button

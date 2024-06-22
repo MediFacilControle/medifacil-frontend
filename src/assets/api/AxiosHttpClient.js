@@ -1,7 +1,8 @@
 import axios from "axios";
 
 export const authApi = axios.create({
-    baseURL: "https://medifacil-backend.vercel.app/",
+    // baseURL: "https://medifacil-backend.vercel.app/",
+    baseURL: "http://localhost:5000/",
     headers: {
         "Content-Type": "application/json",
     },
