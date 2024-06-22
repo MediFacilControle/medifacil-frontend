@@ -28,8 +28,7 @@ export const CardPaciente = ({ name, birthDate, cpf, id }) => {
                     bgColor={"var(--turquoise)"}
                     color={"var(--black)"}
                     text={'Ver Receitas'} 
-
-                    // recipes={recipe}
+                    // recipes={recipePacient}
                     />
                 <Button
                     bgColor={"var(--yellow)"}

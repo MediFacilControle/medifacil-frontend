@@ -10,11 +10,9 @@ export function useFetchClientRecipes(url) {
             setIsLoading(true);
             try {
                 const response = await GenericService.findAllList(url);
-                console.log(response.data);
                 if (!response.data) {
                     throw new Error('Não foi possível buscar os dados');
                 }
-                // const filteredUsers = response.data.filter(recipe => recipe.id === id);
                 setRecipe(response.data);
             } catch (err) {
                 setError(err.message);
