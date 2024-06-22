@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
     const Logout = () => {
         setUser(null); // Limpa os dados do usuário do estado local
-        localStorage.removeItem('@auth:user'); // Remove os dados do usuário do localStorage
+        localStorage.removeItem('@auth:token'); // Remove os dados do usuário do localStorage
         setIsLogged(false); // Define que o usuário não está autenticado
     };
 
