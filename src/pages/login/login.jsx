@@ -81,10 +81,6 @@ export const Login = () => {
               text={'Cadastro Profissional de Saúde'}
               onClick={() => navigate('/cadastro-saude')}
             />
-            <Button
-              text={'teste'}
-              onClick={() => console.log(isLogged)}
-            />
           </ButtonsContainer>
 
           {error && <Alert severity='error'>{error}</Alert>}

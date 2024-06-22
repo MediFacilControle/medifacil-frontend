@@ -1,15 +1,16 @@
 import { CardPacienteButtons, CardPacienteContainer, CardPacienteInfo } from './card-paciente.style.ts'
 import { Button } from '../button/button.jsx'
+import PropTypes from 'prop-types'
 
-export const CardPaciente = () => {
+export const CardPaciente = ({ name, birthDate, cpf }) => {
     return (
         <CardPacienteContainer>
             <CardPacienteInfo>
-                <p><span>Nome: </span> Paciente nome tal</p>
+                <p><span>Nome: </span> {name} </p>
 
-                <p><span>Data de Nascimento: </span> dd/MM/aaa</p>
+                <p><span>Data de Nascimento: </span> {birthDate} </p>
 
-                <p><span>CPF: </span> XXX.XXX.XXX-XX</p>
+                <p><span>CPF: </span> {cpf} </p>
             </CardPacienteInfo>
 
             <CardPacienteButtons>
@@ -26,4 +27,10 @@ export const CardPaciente = () => {
 
         </CardPacienteContainer>
     )
+}
+
+CardPaciente.propTypes = {
+    name: PropTypes.string.isRequired,
+    birthDate: PropTypes.string.isRequired,
+    cpf: PropTypes.string.isRequired
 }
