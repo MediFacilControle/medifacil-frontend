@@ -1,13 +1,14 @@
-import { Autocomplete, IconButton, ListItem, ListItemText, TextField } from "@mui/material"
+import { Autocomplete, Box, IconButton, ListItem, ListItemText, TextField } from "@mui/material"
 import { PrimaryLayout } from "../../components/layout/primary-layout/primary-layout"
 import { CadastroReceitaContainer, CadastroReceitaForm } from "./cadastro-receita.style.ts"
 import { Button } from "../../components/button/button.jsx"
 import { BackArrow } from "../../components/back-arrow/back-arrow.jsx"
-import { useState, useTransition } from "react"
+import { useCallback, useEffect, useMemo, useState, useTransition } from "react"
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { GenericService } from "../../assets/api/service/GenericService.js"
 import { RenderModal } from "./receita-modal.jsx"
+import { useFetchUsers } from "../../hooks/useFetchUsers.js"
 
 
 function renderItem({ item, handleRemoveMed }) {
@@ -33,11 +34,10 @@ export const CadastroReceita = () => {
     const [isPending, startTransition] = useTransition();
     const [formData, setFormData] = useState('');
     const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
-    const [inputValue, setInputValue] = useState('');
     const navigate = useNavigate();
-    const [remedios, setRemedios] = useState([]);
-
+    const [remedio, setRemedio] = useState([]);
+    const { users, isLoading, error } = useFetchUsers('api/user/');
+    
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
@@ -48,6 +48,9 @@ export const CadastroReceita = () => {
         setFormData({ ...formData, [name]: value });
         console.log(formData);
     }
+
+
+    const memoizedUsers = useMemo(() => users, [users]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -81,19 +84,27 @@ export const CadastroReceita = () => {
                         sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'} />
 
                     <Autocomplete
-                        value={value}
-                        onChange={(event, newValue) => {
-                            setValue(newValue);
-                        }}
-                        inputValue={inputValue}
-                        onInputChange={(event, newInputValue) => {
-                            setInputValue(newInputValue)
-                            console.log(newInputValue);
-                        }}
-                        options={['Mayara', 'Gabriela', 'Victor']}
-                        name="paciente"
+                        id="user-select-demo"
                         sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
-                        renderInput={(params) => <TextField {...params} label="Nome do Paciente" />}
+                        options={memoizedUsers}
+                        autoHighlight
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        getOptionLabel={(option) => option.name ? option.name : option.cpf}
+                        renderOption={(props, option) => (
+                            <Box component="li" key={option.id} sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                {option.name ? option.name : option.cpf}
+                            </Box>
+                        )}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Escolha um paciente"
+                                inputProps={{
+                                    ...params.inputProps,
+                                    autoComplete: 'new-password', 
+                                }}
+                            />
+                        )}
                     />
 
                 </CadastroReceitaForm>
