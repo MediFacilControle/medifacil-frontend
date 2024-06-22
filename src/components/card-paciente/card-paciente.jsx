@@ -2,11 +2,7 @@ import { CardPacienteButtons, CardPacienteContainer, CardPacienteInfo } from './
 import { Button } from '../button/button.jsx'
 import PropTypes from 'prop-types'
 import { useFetchClientRecipes } from '../../hooks/useFetchClientRecipes.js';
-// import { AuthContext } from '../../assets/api/context/authContext.jsx';
-// import { useContext } from 'react';
-export const CardPaciente = ({ name, birthDate, cpf }) => {
-    // const { idUser } = useContext(AuthContext);
-    // console.log(idUser);
+export const CardPaciente = ({ name, birthDate, cpf, id }) => {
     const { recipe } = useFetchClientRecipes('api/recipe/get-recipes');
     console.log(recipe);
 
@@ -18,6 +14,7 @@ export const CardPaciente = ({ name, birthDate, cpf }) => {
                 <p><span>Data de Nascimento: </span> {birthDate} </p>
 
                 <p><span>CPF: </span> {cpf} </p>
+                <p><span>id: </span> {id} </p>
             </CardPacienteInfo>
 
             <CardPacienteButtons>
@@ -25,7 +22,7 @@ export const CardPaciente = ({ name, birthDate, cpf }) => {
                     bgColor={"var(--turquoise)"}
                     color={"var(--black)"}
                     text={'Ver Receitas'} 
-                    // recipes={recipes}
+                    // recipes={recipe}
                     />
                 <Button
                     bgColor={"var(--yellow)"}
@@ -41,5 +38,6 @@ export const CardPaciente = ({ name, birthDate, cpf }) => {
 CardPaciente.propTypes = {
     name: PropTypes.string.isRequired,
     birthDate: PropTypes.string.isRequired,
-    cpf: PropTypes.string.isRequired
+    cpf: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired
 }

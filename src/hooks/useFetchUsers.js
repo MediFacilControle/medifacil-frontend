@@ -11,6 +11,7 @@ export function useFetchUsers(url) {
       setIsLoading(true);
       try {
         const response = await GenericService.findAllList(url);
+        // console.log(response.data);
         if (!response.data) {
           throw new Error('Não foi possível buscar os dados');
         }
