@@ -24,6 +24,6 @@ export const CadastroRemedioForm = styled.form`
 
     div{
         display: flex;
-        justify-content: space-between;
+        gap: 1rem;
     }
 `
