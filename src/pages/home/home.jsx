@@ -5,6 +5,8 @@ import { CardPaciente } from '../../components/card-paciente/card-paciente.jsx'
 import { Button } from '../../components/button/button.jsx'
 import { SearchContainer } from '../../components/card-paciente/card-paciente.style.ts'
 import { useFetchUsers } from '../../hooks/useFetchUsers.js'
+import moment from 'moment';
+
 
 export const Home = () => {
     const { users } = useFetchUsers('api/user/');
@@ -24,10 +26,10 @@ export const Home = () => {
                         return (
                             <CardPaciente
                             name={user.name ? user.name : 'Nome não informado'} 
-                            birthDate={user.birthDate}
+                            birthDate={moment(user.birthDate).format('DD/MM/YYYY')}
                             cpf={user.cpf}
-                            key={user.id}>
-                                
+                            key={user.id}
+                            id={user._id}>
                             </CardPaciente>
                         )
                     })}
