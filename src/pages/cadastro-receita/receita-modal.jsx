@@ -213,7 +213,7 @@ export const RenderModal = ({ handleClose, open, setRemedio }) => {
                         ))}
                     </ImageList>
 
-                    {erroForm && <Alert severity='error'>{erroForm}</Alert>}
+                    {erroForm && <Alert severity='warning'>{erroForm}</Alert>}
                     <Button
                         type="submit"
                         text='Adicionar à Receita'
