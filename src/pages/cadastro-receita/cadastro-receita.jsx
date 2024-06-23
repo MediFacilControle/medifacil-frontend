@@ -1,11 +1,11 @@
-import { Autocomplete, Box, IconButton, InputAdornment, ListItem, ListItemText, TextField, Typography } from "@mui/material"
+import { Alert, Autocomplete, Box, Dialog, DialogContent, DialogTitle, IconButton, InputAdornment, ListItem, TextField, Typography } from "@mui/material"
 import { PrimaryLayout } from "../../components/layout/primary-layout/primary-layout"
 import { CadastroReceitaContainer, CadastroReceitaForm } from "./cadastro-receita.style.ts"
 import { Button } from "../../components/button/button.jsx"
 import { BackArrow } from "../../components/back-arrow/back-arrow.jsx"
 import { useCallback, useEffect, useMemo, useState, useTransition } from "react"
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useNavigate, useSearchParams } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { GenericService } from "../../assets/api/service/GenericService.js"
 import { RenderModal } from "./receita-modal.jsx"
 import { useFetchUsers } from "../../hooks/useFetchUsers.js"
@@ -14,10 +14,12 @@ import { useFetchUsers } from "../../hooks/useFetchUsers.js"
 export const CadastroReceita = () => {
     const [isPending, startTransition] = useTransition();
     const [formData, setFormData] = useState('');
-    const [completedForm, setCompletedForm] = useState([]);
     const [open, setOpen] = useState(false);
     const [remedio, setRemedio] = useState([]);
     const [isFormValid, setIsFormValid] = useState(false);
+    const [success, setSuccess] = useState('');
+    const [error, setError] = useState('');
+
     const navigate = useNavigate();
 
     const { users } = useFetchUsers('api/user/');
@@ -27,7 +29,6 @@ export const CadastroReceita = () => {
     };
 
     function renderItem({ index, item, handleRemoveMed }) {
-        // console.log('item:', item);
         return (
             <ListItem key={index}
                 secondaryAction={
@@ -74,7 +75,7 @@ export const CadastroReceita = () => {
         if (name && pacient && validity && remedio.length > 0) {
             console.log('Formulário completo');
             setIsFormValid(true);
-      
+
         } else {
             console.log('Formulário incompleto');
         }
@@ -86,7 +87,7 @@ export const CadastroReceita = () => {
         e.preventDefault();
         console.log('Enviando dados...');
         const today = new Date();
-        const validityDays = parseInt(formData.validity, 10); 
+        const validityDays = parseInt(formData.validity, 10);
         const expirationDate = new Date(today);
         expirationDate.setDate(today.getDate() + validityDays);
 
@@ -101,10 +102,10 @@ export const CadastroReceita = () => {
         startTransition(async () => {
             try {
                 const newReceita = await GenericService.create('api/recipe/register-recipe', formattedRecipe);
-                if (newReceita.status === 200 || newReceita.status === 204 || newReceita.status === 201) {
+                if (newReceita.status === 201) {
                     if (newReceita && newReceita.data) {
-                        console.log('Receita created successfully:', newReceita.data);
-                        navigate('/home');
+                        setSuccess('Receita criada com sucesso!');
+                        setTimeout(() => navigate('/home'), 3000);
                     } else {
                         console.error('Falha ao criar a receita. Unexpected response:', newReceita);
                     }
@@ -120,6 +121,7 @@ export const CadastroReceita = () => {
             <CadastroReceitaContainer>
                 <BackArrow />
                 <CadastroReceitaForm>
+                    {success && <Alert variant="filled" severity="success">{success}</Alert>}
                     <h2>Cadastro de Receita</h2>
                     <TextField
                         label='Nome da receita'
