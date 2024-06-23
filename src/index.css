@@ -29,3 +29,15 @@
 input, button {
     all: unset;
 }
+
+#medicine-information-photo {
+    height:  150px;
+}
+
+#box-images-google-photos {
+    &:hover {
+        cursor: pointer;
+        border-radius: var(--border-radius);
+        border: var(--red) 1px solid;
+    }
+}
