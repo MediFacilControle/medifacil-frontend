@@ -1,7 +1,7 @@
 import { authApi } from '../AxiosHttpClient';
 
 export class GenericService {
-  
+
   static async findAll(route, params) {
     try {
       return await authApi.get(`${route}?${params}`);
@@ -13,7 +13,6 @@ export class GenericService {
   }
 
   static async findAllList(list, header) {
-    console.log(list)
     try {
       return await authApi.get(`/${list}`, { headers: header });
     } catch (e) {
@@ -40,19 +39,16 @@ export class GenericService {
   }
 
   static async findById(route, id) {
-    // try {
-      console.log(authApi)
-      console.log(route, id)
+    try {
       return await authApi.get(`/${route}/${id}`);
-    // } catch (e) {
-    //   return e.response;
-    // }
+    } catch (e) {
+      return e.response;
+    }
   }
 
   static async findRecipeById(route, id) {
-    console.log(authApi.get(`/${route}/${id}`))
     try {
-      return await authApi.get(`/${route}/${id}`);
+      return await authApi.get(`/${route}/${id}`, { responseType: 'blob' });
     } catch (e) {
       return e.response;
     }

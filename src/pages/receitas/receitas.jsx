@@ -1,24 +1,32 @@
 import { PrimaryLayout } from "../../components/layout/primary-layout/primary-layout"
-import { Box, Typography } from "@mui/material"
+import { Alert, Box, Typography } from "@mui/material"
 import { useFetchClientRecipes } from "../../hooks/useFetchClientRecipes";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Button } from "../../components/button/button";
 import { GenericService } from "../../assets/api/service/GenericService";
 
 export const Receitas = () => {
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
     // para pegar todos as receitas relacionado ao médico (pessoa logada)
     const { recipe } = useCallback(useFetchClientRecipes('api/recipe/get-recipes'));
-    
+
     const handleClickToPDF = async (id) => {
-        try {
-          const response = await GenericService.findRecipeById('api/pdf/generate-pdf', id);
-          console.log('PDF generated:', response);
-          // Aqui você pode fazer algo com a resposta, como abrir um link para download do PDF, etc.
-        } catch (error) {
-          console.error('Error handling PDF generation:', error);
-          // Trate o erro conforme necessário, por exemplo, exibindo uma mensagem de erro para o usuário
+        const response = await GenericService.findRecipeById('api/pdf/generate-pdf', id);
+
+        if (response && response.data) {
+            // Cria um blob com os dados do PDF
+            const file = new Blob([response.data], { type: 'application/pdf' });
+            // Cria uma URL para o blob
+            const fileURL = URL.createObjectURL(file);
+            // Abre o PDF em uma nova aba
+            window.open(fileURL);
+            setSuccess('PDF gerado com sucesso. Aguarde...');
+            setTimeout(() => setSuccess(''), 5000);
+        } else {
+            setError('Erro ao gerar o PDF');
         }
-      };
+    }
 
     return (
         <PrimaryLayout>
@@ -46,6 +54,8 @@ export const Receitas = () => {
                                     )
                                 })}
                             </Typography>
+                            {error && <Alert sx={{ marginBottom: '.75rem' }} severity="error">{error}</Alert>}
+                            {success && <Alert sx={{ marginBottom: '.75rem' }} severity="success">{success}</Alert>}
                             <Button
                                 text='Gerar PDF'
                                 onClick={() => handleClickToPDF(recipe._id)} />

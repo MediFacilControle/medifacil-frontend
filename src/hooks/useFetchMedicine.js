@@ -6,16 +6,15 @@ export const useFetchMedicine = (route) => {
     const [error, setError] = useState(null);
 
     const fetchMedicine = async (params) => {
-        // try {
+        try {
             const response = await GenericService.findAll(route, params)
             if (!response.data) {
                 throw new Error('Não foi possível buscar os dados')
             }
             setMedicine(response.data)
-            // console.log(response)
-        // } catch (error) {
-        //     setError(error.message);
-        // }
+        } catch (error) {
+            setError(error.message);
+        }
     }
 
     return { medicine, error, fetchMedicine }

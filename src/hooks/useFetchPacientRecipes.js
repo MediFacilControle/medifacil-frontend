@@ -10,7 +10,6 @@ export function useFetchPacientRecipes(url, id) {
             setIsLoading(true);
             try {
                 const response = await GenericService.findAllListById(url, id);
-                console.log(response.data);
                 if (!response.data) {
                     throw new Error('Não foi possível buscar os dados');
                 }
