@@ -2,7 +2,7 @@ import { useState, useTransition } from 'react'
 import { SecondaryLayout } from '../../components/layout/secondary-layout/secondary-layout';
 import { GenericService } from '../../assets/api/service/GenericService.js';
 import { useNavigate } from 'react-router-dom';
-import { TextField } from '@mui/material';
+import { Alert, TextField } from '@mui/material';
 import { Button } from '../../components/button/button';
 import { CadastroPacienteContainer } from './cadastro-paciente.style';
 import { ErrorAlert } from '../../components/error-alert/error-alert';
@@ -12,6 +12,7 @@ export const CadastroPaciente = () => {
     const [isPeding, startTransition] = useTransition();
     const [formData, setFormData] = useState('');
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
 
     const navigate = useNavigate();
 
@@ -30,22 +31,20 @@ export const CadastroPaciente = () => {
             return;
         } else {
             setError(null);
-            console.log('Enviando dados...');
             startTransition(async () => {
                 try {
                     const newUser = await GenericService.create('auth/pre-register', formData);
                     if (newUser.status >= 200 && newUser.status < 300) {
                         if (newUser && newUser.data) {
-                            console.log('User created successfully:', newUser.data);
+                            setSuccess('Usuário criado com sucesso');
                             navigate('/home');
                         } else {
-                            console.error('Failed to create user. Unexpected response:', newUser);
+                            setError('Falha ao criar o usuário. Resposta inesperada');
                         }
                     }
 
                 } catch (error) {
-                    setError('Error creating user. Please try again.');
-                    console.error('Error creating user:', error);
+                    setError('Falha ao criar o usuário. Tente novamente.');
                 }
             })
         }
@@ -55,7 +54,13 @@ export const CadastroPaciente = () => {
         <SecondaryLayout>
             <BackArrow />
             <CadastroPacienteContainer onSubmit={handleSubmit}>
-
+                <TextField required
+                    label="Nome"
+                    type='text'
+                    name='name'
+                    placeholder='Escreva o CPF completo'
+                    sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
+                    onChange={handleChange} />
                 <TextField required
                     label="CPF"
                     type='text'
@@ -78,8 +83,8 @@ export const CadastroPaciente = () => {
                     disabled={isPeding} />
 
             </CadastroPacienteContainer>
-
-            <ErrorAlert error={error} />
+            {success && <Alert severity='success'>{success}</Alert>}
+            {error && <ErrorAlert>{error}</ErrorAlert>}
         </SecondaryLayout>
     )
 }

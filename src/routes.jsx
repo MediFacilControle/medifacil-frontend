@@ -6,6 +6,7 @@ import { CadastroSaude } from "./pages/cadastro-saude/cadastro-saude";
 import { PageNotFound } from "./pages/not-found/not-found";
 import { Home } from "./pages/home/home";
 import { PrivateRoute } from "./private-route";
+import { Receitas } from "./pages/receitas/receitas.jsx";
 
 export const Router = () => {
     return (
@@ -17,6 +18,7 @@ export const Router = () => {
                     <Route exact path="/cadastro-saude" element={<CadastroSaude />} />
                     <Route exact path="/cadastro-paciente" element={<CadastroPaciente />} />
                     <Route exact path="/cadastro-receita" element={<CadastroReceita />} />
+                    <Route exact path="/receitas" element={<Receitas />} />
                 </Route>
 
                 <Route path="*" element={<PageNotFound />} />

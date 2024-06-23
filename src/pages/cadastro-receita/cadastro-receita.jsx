@@ -1,4 +1,4 @@
-import { Alert, Autocomplete, Box, Dialog, DialogContent, DialogTitle, IconButton, InputAdornment, ListItem, TextField, Typography } from "@mui/material"
+import { Alert, Autocomplete, Box, IconButton, InputAdornment, ListItem, TextField, Typography } from "@mui/material"
 import { PrimaryLayout } from "../../components/layout/primary-layout/primary-layout"
 import { CadastroReceitaContainer, CadastroReceitaForm } from "./cadastro-receita.style.ts"
 import { Button } from "../../components/button/button.jsx"
@@ -65,7 +65,6 @@ export const CadastroReceita = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-        console.log(formData);
     }
 
     const memoizedUsers = useMemo(() => users, [users]);
@@ -73,19 +72,15 @@ export const CadastroReceita = () => {
     const validateForm = useCallback(() => {
         const { name, pacient, validity } = formData;
         if (name && pacient && validity && remedio.length > 0) {
-            console.log('Formulário completo');
             setIsFormValid(true);
 
-        } else {
-            console.log('Formulário incompleto');
-        }
+        } else setIsFormValid(false);
     })
 
     useEffect(() => validateForm(), [formData, remedio, validateForm]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Enviando dados...');
         const today = new Date();
         const validityDays = parseInt(formData.validity, 10);
         const expirationDate = new Date(today);
@@ -107,11 +102,11 @@ export const CadastroReceita = () => {
                         setSuccess('Receita criada com sucesso!');
                         setTimeout(() => navigate('/home'), 3000);
                     } else {
-                        console.error('Falha ao criar a receita. Unexpected response:', newReceita);
+                        setError('Falha ao criar a receita. Unexpected response:', newReceita);
                     }
                 }
             } catch (error) {
-                throw new Error('Erro no cadastro da receita. Por favor, tente novamente.');
+                setError('Erro no cadastro da receita. Por favor, tente novamente.');
             }
         })
     }
@@ -122,6 +117,7 @@ export const CadastroReceita = () => {
                 <BackArrow />
                 <CadastroReceitaForm>
                     {success && <Alert variant="filled" severity="success">{success}</Alert>}
+                    {error && <Alert variant="filled" severity="error">{error}</Alert>}
                     <h2>Cadastro de Receita</h2>
                     <TextField
                         label='Nome da receita'

@@ -1,16 +1,10 @@
 import { CardPacienteButtons, CardPacienteContainer, CardPacienteInfo } from './card-paciente.style.ts'
 import { Button } from '../button/button.jsx'
 import PropTypes from 'prop-types'
-import { useFetchClientRecipes } from '../../hooks/useFetchClientRecipes.js';
-import { useFetchPacientRecipes } from '../../hooks/useFetchPacientRecipes.js';
+import { useNavigate } from 'react-router-dom';
 
 export const CardPaciente = ({ name, birthDate, cpf, id }) => {
-    // para pegar todos as receitas relacionado ao médico (pessoa logada)
-    const { recipe } = useFetchClientRecipes('api/recipe/get-recipes');
-    // para pegar todas as receitas do paciente (independente de quem preescreveu)
-    const { recipePacient } = useFetchPacientRecipes('api/recipe/get-user-recipe', id);
-    console.log(recipePacient)
-    console.log(recipe);
+    const navigate = useNavigate();
 
     return (
         <CardPacienteContainer>
@@ -28,12 +22,13 @@ export const CardPaciente = ({ name, birthDate, cpf, id }) => {
                     bgColor={"var(--turquoise)"}
                     color={"var(--black)"}
                     text={'Ver Receitas'} 
-                    // recipes={recipePacient}
+                    onClick={() => navigate(`/receitas`)}
                     />
                 <Button
                     bgColor={"var(--yellow)"}
                     color={"var(--black)"}
                     text={'Cadastrar Receita'}
+                    onClick={() => navigate(`/cadastro-receita`)}
                     textColor={'var(--black)'} />
             </CardPacienteButtons>
 

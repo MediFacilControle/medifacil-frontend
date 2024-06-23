@@ -20,7 +20,6 @@ export const Login = () => {
   };
 
   const handleSubmit = (e) => {
-    console.log('formData:', formData);
     e.preventDefault();
     startTransition(async () => {
       try {
@@ -31,7 +30,6 @@ export const Login = () => {
 
         if ((response.status === 200 || response.status === 204) && response.data.token) {
           setTimeout(() => navigate('/home'), 1000);
-          console.log('passou aqui no if')
 
         } else {
           setError('Erro ao logar o usuário. Tente novamente.');
