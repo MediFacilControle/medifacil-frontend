@@ -1,4 +1,4 @@
-import { Autocomplete, Box, IconButton, ListItem, ListItemText, TextField } from "@mui/material"
+import { Autocomplete, Box, IconButton, InputAdornment, ListItem, ListItemText, TextField, Typography } from "@mui/material"
 import { PrimaryLayout } from "../../components/layout/primary-layout/primary-layout"
 import { CadastroReceitaContainer, CadastroReceitaForm } from "./cadastro-receita.style.ts"
 import { Button } from "../../components/button/button.jsx"
@@ -11,33 +11,50 @@ import { RenderModal } from "./receita-modal.jsx"
 import { useFetchUsers } from "../../hooks/useFetchUsers.js"
 
 
-function renderItem({ item, handleRemoveMed }) {
-    return (
-        <ListItem
-            secondaryAction={
-                <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    title="Delete"
-                    onClick={() => handleRemoveMed(item)}
-                >
-                    <DeleteIcon />
-                </IconButton>
-            }
-        >
-            <ListItemText primary={item} />
-        </ListItem>
-    );
-}
-
 export const CadastroReceita = () => {
     const [isPending, startTransition] = useTransition();
     const [formData, setFormData] = useState('');
+    const [completedForm, setCompletedForm] = useState([]);
     const [open, setOpen] = useState(false);
-    const navigate = useNavigate();
     const [remedio, setRemedio] = useState([]);
-    
-    const { users, isLoading, error } = useFetchUsers('api/user/');
+    const [isFormValid, setIsFormValid] = useState(false);
+    const navigate = useNavigate();
+
+    const { users } = useFetchUsers('api/user/');
+
+    const handleRemoveMed = (itemToRemove) => {
+        setRemedio(remedio.filter(item => item !== itemToRemove));
+    };
+
+    function renderItem({ index, item, handleRemoveMed }) {
+        // console.log('item:', item);
+        return (
+            <ListItem key={index}
+                secondaryAction={
+                    <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        title="Delete"
+                        onClick={() => handleRemoveMed(item)}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
+                }
+            >
+                <Box sx={{ display: 'flex', gap: '1rem', width: '100%' }}>
+                    <img id="medicine-information-photo" src={item.link_photo} alt="Imagem do medicamento" />
+                    <Typography>
+                        <p>Nome do medicamento: {item.name}</p>
+                        <p>Duração do tratamento: {item.usage_duration} dias</p>
+                        <p>Intervalo: {item.usage_interval}</p>
+                        <p>Quantidade: {item.quantity}</p>
+                        <p>Início do tratamento: {item.treatment_start}</p>
+                    </Typography>
+                </Box>
+            </ListItem>
+        );
+    }
+
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
@@ -50,21 +67,46 @@ export const CadastroReceita = () => {
         console.log(formData);
     }
 
-
     const memoizedUsers = useMemo(() => users, [users]);
+
+    const validateForm = useCallback(() => {
+        const { name, pacient, validity } = formData;
+        if (name && pacient && validity && remedio.length > 0) {
+            console.log('Formulário completo');
+            setIsFormValid(true);
+      
+        } else {
+            console.log('Formulário incompleto');
+        }
+    })
+
+    useEffect(() => validateForm(), [formData, remedio, validateForm]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log('Enviando dados...');
+        const today = new Date();
+        const validityDays = parseInt(formData.validity, 10); 
+        const expirationDate = new Date(today);
+        expirationDate.setDate(today.getDate() + validityDays);
+
+        const formattedExpirationDate = expirationDate.toISOString().split('T')[0];
+        const formattedRecipe = {
+            name: formData.name,
+            pacient: formData.pacient,
+            data_expiration: formattedExpirationDate,
+            medicines: remedio
+        }
+
         startTransition(async () => {
             try {
-                const newReceita = await GenericService.create('api/recipe/register-recipe', formData);
-                if (newReceita.status >= 200 && newReceita.status < 300) {
+                const newReceita = await GenericService.create('api/recipe/register-recipe', formattedRecipe);
+                if (newReceita.status === 200 || newReceita.status === 204 || newReceita.status === 201) {
                     if (newReceita && newReceita.data) {
                         console.log('Receita created successfully:', newReceita.data);
                         navigate('/home');
                     } else {
-                        console.error('Failed to create user. Unexpected response:', newReceita);
+                        console.error('Falha ao criar a receita. Unexpected response:', newReceita);
                     }
                 }
             } catch (error) {
@@ -81,13 +123,17 @@ export const CadastroReceita = () => {
                     <h2>Cadastro de Receita</h2>
                     <TextField
                         label='Nome da receita'
-                        name="nome-receita"
+                        name="name"
+                        onChange={handleChange}
                         sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'} />
 
                     <Autocomplete
                         id="user-select-demo"
                         sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
                         options={memoizedUsers}
+                        onChange={(event, newValue) => {
+                            setFormData({ ...formData, pacient: newValue._id });
+                        }}
                         autoHighlight
                         isOptionEqualToValue={(option, value) => option.id === value.id}
                         getOptionLabel={(option) => option.name ? option.name : option.cpf}
@@ -102,21 +148,43 @@ export const CadastroReceita = () => {
                                 label="Escolha um paciente"
                                 inputProps={{
                                     ...params.inputProps,
-                                    autoComplete: 'new-password', 
+                                    autoComplete: 'new-password',
                                 }}
                             />
                         )}
                     />
 
+                    <TextField required
+                        label='Validade da receita'
+                        type="number"
+                        name="validity"
+                        onChange={handleChange}
+                        InputProps={{ endAdornment: <InputAdornment position="dias">dias</InputAdornment> }}
+                        sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'} />
+
                 </CadastroReceitaForm>
-                <h2>Medicamentos</h2>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '700px', margin: '1rem auto' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1rem', width: '100%', margin: '2rem auto' }}>
+                        <h2>Medicamentos</h2>
 
-                <Button
-                    text='Adicionar Medicamento'
-                    onClick={handleOpen} />
-
-                <RenderModal handleClose={handleClose} open={open} />
-
+                        <Button
+                            text='Adicionar Medicamento'
+                            width={'50%'}
+                            onClick={handleOpen} />
+                    </Box>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '700px', margin: '1rem auto' }}>
+                        {remedio && Object.keys(remedio).length > 0 ?
+                            Object.values(remedio).map((item, index) => renderItem({ index, item, handleRemoveMed })) :
+                            <p>Nenhum medicamento adicionado</p>
+                        }
+                    </Box>
+                    <Button
+                        text='Cadastrar Receita'
+                        width={'100%'}
+                        disabled={!isFormValid}
+                        onClick={handleSubmit} />
+                </Box>
+                <RenderModal handleClose={handleClose} open={open} setRemedio={setRemedio} />
             </CadastroReceitaContainer>
         </PrimaryLayout>
     )

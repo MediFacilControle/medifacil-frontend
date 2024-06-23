@@ -1,11 +1,10 @@
-import { Autocomplete, Box, InputAdornment, Modal, TextField, Typography } from "@mui/material"
+import { Alert, Autocomplete, Box, IconButton, ImageList, ImageListItem, InputAdornment, Modal, TextField, Typography } from "@mui/material"
 import { CadastroRemedioForm } from "./cadastro-receita.style"
 import { Button } from "../../components/button/button"
 import { useCallback, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
-import { useSearchParams } from "react-router-dom";
-import { GenericService } from "../../assets/api/service/GenericService.js";
 import { useFetchMedicine } from "../../hooks/useFetchMedicine.js";
+import SearchIcon from '@mui/icons-material/Search';
 import axios from "axios";
 
 const style = {
@@ -14,7 +13,7 @@ const style = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 1200,
-    height: 700,
+    height: 900,
     bgcolor: 'var(--white)',
     boxShadow: 24,
     p: 4,
@@ -24,38 +23,88 @@ const style = {
     borderRadius: 'var(--border-radius)',
 }
 
-export const RenderModal = ({ handleClose, open }) => {
-    const [formData, setFormData] = useState('');
+export const RenderModal = ({ handleClose, open, setRemedio }) => {
+    const [formData, setFormData] = useState({
+        dosage: '',
+        usage_interval: '',
+        usage_duration: '',
+        quantity: ''
+    });
     const [inputValue, setInputValue] = useState('');
     const [value, setValue] = useState('');
-    const [remedio, setRemedio] = useState([]);
+    const [imageLinks, setImageLinks] = useState([]);
+    const [imagem, setImagem] = useState('');
+    const [isFormComplete, setIsFormComplete] = useState(false);
+    const [erroForm, setErroForm] = useState('');
 
-    const { error, medicine } = useFetchMedicine('api/medicine/list-all');
+    const { medicine, fetchMedicine } = useFetchMedicine('/api/medicine/get-medicines-by-name');
+
+    const verificaCampos = useCallback(() => {
+        const formCamposPreenchidos = Object.values(formData).every(value => value.trim() !== '');
+        const medicinesCamposPreenchidos = Object.values(value).every(value => value !== '');
+        if (formCamposPreenchidos && medicinesCamposPreenchidos && imagem !== '') {
+            setIsFormComplete(true);
+            setErroForm('');
+            return true
+        } else {
+            setIsFormComplete(false);
+            setErroForm('Preencha todos os campos!');
+            return false
+        }
+    }, [formData, value, imagem, setErroForm, setIsFormComplete])
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-        console.log(formData);
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
     }
 
-    const memoizedMedicine = useCallback(() => medicine, [medicine]);
+    useEffect(() => {
+        verificaCampos();
+    }, [formData, value, imagem, verificaCampos])
 
-    // const getImage = async () => {
-    //     const response = await axios.get('https://www.googleapis.com/customsearch/v1', {
-    //         params: {
-    //             key: 'AIzaSyBl_t_8322eAhMntYmlQvpYFElrL9lbvxA',
-    //             cx: '31135ccc7bb374f3a',
-    //             q: 'paracetamol ems',
-    //             num: 5,
-    //             searchType: 'image',
-    //         },
-    //     });
-    //     console.log(response)
+    const handleInputChange = (event, newInputValue) => setInputValue(newInputValue);
 
-    // }
-    // useEffect(() => {
-    //     getImage();
-    // }, [])
+    const handleSearchClick = async () => {
+        inputValue.replace(' ', '%');
+        await fetchMedicine(`nome_produto=${inputValue}`);
+    };
+
+    const handleAddMedicine = (e) => {
+        e.preventDefault();
+        const formattedRemedio = {
+            medicine: value._id,
+            name: value.nome_produto,
+            usage_duration: parseInt(formData.usage_duration),
+            usage_interval: `${formData.usage_interval} hours`,
+            treatment_start: new Date().toISOString().split('T')[0],
+            link_photo: imagem,
+            quantity: `${formData.dosage} mg | ${formData.quantity} comprimidos`
+        };
+        setRemedio(prevState => [...prevState, formattedRemedio]);
+        handleClose();
+
+    }
+
+    const getImage = async () => {
+        const response = await axios.get('https://www.googleapis.com/customsearch/v1', {
+            params: {
+                key: 'AIzaSyBl_t_8322eAhMntYmlQvpYFElrL9lbvxA',
+                cx: '31135ccc7bb374f3a',
+                q: `${value.nome_produto} remédo`,
+                sort: 'date:r:relevance',
+                searchType: 'image',
+            },
+        });
+        setImageLinks(response.data.items.map(item => item.link));
+    }
+
+    const handleOnChange = async (event, newValue) => {
+        setValue(newValue);
+        setTimeout(() => getImage(), 1000);
+    }
 
     return (
         <Modal
@@ -70,25 +119,31 @@ export const RenderModal = ({ handleClose, open }) => {
                 </Typography>
 
                 <Autocomplete
-                    id="country-select-demo"
-                    sx={'width: 100%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'}
-                    options={memoizedMedicine}
-                    onChange={handleChange}
+                    sx={{ width: '100%', backgroundColor: 'var(--blueish-gray)', borderRadius: 'var(--border-radius)' }}
+                    onInputChange={handleInputChange}
                     autoHighlight
-                    isOptionEqualToValue={(option, value) => option.id === value.id}
-                    getOptionLabel={(option) => option.name ? option.name : option.cpf}
+                    options={medicine}
+                    onChange={handleOnChange}
+                    getOptionLabel={(option) => option.nome_produto}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
                     renderOption={(props, option) => (
-                        console.log(option),
-                        <Box component="li" key={option.id} sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                            {option.name ? option.name : option.cpf}
+                        <Box component="li" key={option._id}{...props}>
+                            {`${option.nome_produto} | ${option.empresa_detentora_registro}`}
                         </Box>
                     )}
                     renderInput={(params) => (
                         <TextField
                             {...params}
                             label="Escolha um medicamento"
-                            inputProps={{
-                                ...params.inputProps,
+                            InputProps={{
+                                ...params.InputProps,
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton onClick={handleSearchClick}>
+                                            <SearchIcon />
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
                                 autoComplete: 'new-password',
                             }}
                         />
@@ -99,23 +154,28 @@ export const RenderModal = ({ handleClose, open }) => {
                     Informações adicionais
                 </Typography>
 
-                <p>Nome do medicamento: PACO</p>
-                <p>Princípio ativo: Paracetamol + Fosfato de Codeína</p>
-                <p>Administração: VIA ORAL</p>
-                <p>Fabricante: Eurofarma Laboratórios S.A</p>
-                <p>Categoria: Genérico</p>
+                <Box sx={{ display: 'flex', gap: '1rem', width: '100%' }}>
+                    <img id="medicine-information-photo" src={imagem} alt="Imagem do medicamento" />
+                    <Typography>
+                        <p>Nome do medicamento: {value.nome_produto}</p>
+                        <p>Princípio ativo: {value.principio_ativo}</p>
+                        <p>Classe: {value.classe_terapeutica}</p>
+                        <p>Fabricante: {value.empresa_detentora_registro}</p>
+                        <p>Categoria: {value.categoria_regulatoria}</p>
+                    </Typography>
+                </Box>
 
                 <CadastroRemedioForm>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         <Box>
-                            <TextField
+                            <TextField required
                                 label='Dose'
                                 type="number"
-                                name="dose"
+                                name="dosage"
                                 onChange={handleChange}
                                 InputProps={{ endAdornment: <InputAdornment position="end">mg</InputAdornment> }}
                                 sx={'width: 30%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'} />
-                            <TextField
+                            <TextField required
                                 label='Periodicidade do medicamento'
                                 type="number"
                                 name="usage_interval"
@@ -124,14 +184,14 @@ export const RenderModal = ({ handleClose, open }) => {
                                 sx={'width: 30%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'} />
                         </Box>
                         <Box>
-                            <TextField
+                            <TextField required
                                 label='Duração de tratamento'
                                 type="number"
                                 name="usage_duration"
                                 onChange={handleChange}
                                 InputProps={{ endAdornment: <InputAdornment position="end">dias</InputAdornment> }}
                                 sx={'width: 30%; background-color: var(--blueish-gray); border-radius: var(--border-radius)'} />
-                            <TextField
+                            <TextField required
                                 label='Comprimidos'
                                 type="number"
                                 name="quantity"
@@ -141,15 +201,24 @@ export const RenderModal = ({ handleClose, open }) => {
                         </Box>
                     </Box>
 
-                    <Box sx={{ backgroundColor: 'green', width: 50, height: 50 }} onClick={() => {
-                        console.log('teste')
-                    }}>
+                    <Typography variant="p">
+                        Escolha uma foto para o medicamento
+                    </Typography>
 
-                    </Box>
+                    <ImageList sx={'width: 100%'} cols={imageLinks.length} rowHeight={150}>
+                        {imageLinks.map((link, index) => (
+                            <ImageListItem key={index} sx={{ width: 100, height: 100 }}>
+                                <img id="box-images-google-photos" onClick={() => setImagem(link)} src={link} alt="Imagem do medicamento" />
+                            </ImageListItem>
+                        ))}
+                    </ImageList>
 
+                    {erroForm && <Alert severity='error'>{erroForm}</Alert>}
                     <Button
                         type="submit"
                         text='Adicionar à Receita'
+                        onClick={handleAddMedicine}
+                        disabled={!isFormComplete}
                         color={'var(--black)'}
                         bgColor={'var(--turquoise)'} />
 
@@ -159,7 +228,9 @@ export const RenderModal = ({ handleClose, open }) => {
     )
 }
 
+
 RenderModal.propTypes = {
     open: PropTypes.bool.isRequired,
-    handleClose: PropTypes.func.isRequired
+    handleClose: PropTypes.func.isRequired,
+    setRemedio: PropTypes.func.isRequired,
 }

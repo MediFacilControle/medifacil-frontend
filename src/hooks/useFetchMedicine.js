@@ -1,25 +1,22 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { GenericService } from "../assets/api/service/GenericService"
 
-export const useFetchMedicine = (route, params) => {
+export const useFetchMedicine = (route) => {
     const [medicine, setMedicine] = useState([]);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetchMedicine = async () => {
-            try {
-                const response = await GenericService.findAll(route, params)
-                if (!response.data) {
-                    throw new Error('Não foi possível buscar os dados')
-                }
-                setMedicine(response.data)
-                console.log(response)
-            } catch (error) {
-                setError(error.message);
+    const fetchMedicine = async (params) => {
+        // try {
+            const response = await GenericService.findAll(route, params)
+            if (!response.data) {
+                throw new Error('Não foi possível buscar os dados')
             }
-        }
-        fetchMedicine()
-    }, [route, params])
+            setMedicine(response.data)
+            // console.log(response)
+        // } catch (error) {
+        //     setError(error.message);
+        // }
+    }
 
-    return { medicine, error }
+    return { medicine, error, fetchMedicine }
 }
