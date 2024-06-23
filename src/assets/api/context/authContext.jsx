@@ -23,10 +23,11 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await GenericService.create('auth/login-cpf', { cpf, password });
             if ((response.status === 200 || response.status === 204) && response.data) {
-                setUser(response.data); // Armazena os dados do usuário no estado local
+                setUser(response.data); 
                 localStorage.setItem('@auth:token', response.data.token); 
                 const decodedToken = jwtDecode(response.data.token);
                 setIdUser(decodedToken.userId); 
+                setTimeout( () => Logout(), 3600000); // Desloga o usuário após 1 hora
                 return response;
             } else {
                 throw new Error('Falha em logar o user');

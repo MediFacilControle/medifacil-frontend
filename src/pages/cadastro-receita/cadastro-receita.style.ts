@@ -13,7 +13,7 @@ export const CadastroReceitaForm = styled.form`
     flex-direction: column;
     gap: 1rem;
     margin: 0 auto;
-    width: 500px;
+    width: 700px;
 `
 
 export const CadastroRemedioForm = styled.form`
