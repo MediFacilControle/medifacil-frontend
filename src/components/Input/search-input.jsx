@@ -18,7 +18,7 @@ export const SearchInput = () => {
             onChange={e =>  setSearchParams({ search: e.target.value }, { replace: true })}
             InputProps={{
                 endAdornment:
-                    <InputAdornment>
+                    <InputAdornment position="end">
                         <SearchIcon />
                     </InputAdornment>
             }} />

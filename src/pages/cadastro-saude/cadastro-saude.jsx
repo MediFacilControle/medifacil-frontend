@@ -18,7 +18,6 @@ export const CadastroSaude = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-        console.log(formData);
     }
 
     const handleSubmit = (e) => {
@@ -29,15 +28,13 @@ export const CadastroSaude = () => {
                 const newUser = await GenericService.create('auth/register', formData);
                 if (newUser.status >= 200 && newUser.status < 300) {
                     if (newUser && newUser.data) {
-                        console.log('User created successfully:', newUser.data);
                         navigate('/');
                     } else {
-                        console.error('Failed to create user. Unexpected response:', newUser);
+                        setError('Falha ao criar o usuário. Resposta inesperada', newUser);
                     }   
                 }
             } catch (error) {
-                setError('Error creating user. Please try again.');
-                console.error('Error creating user:', error);
+                setError('Falha ao criar o usuário. Tente novamente.');
             }
         })
     }

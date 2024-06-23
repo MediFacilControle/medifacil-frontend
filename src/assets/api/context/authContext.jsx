@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const token = localStorage.getItem('@auth:token');
+        setIsLogged(!!token); 
         if (token) {
             const decodedToken = jwtDecode(token);
             setIdUser(decodedToken.userId); // Supondo que o ID do usuário esteja no campo `userId` do token decodificado
