@@ -28,8 +28,7 @@ export const Home = () => {
                             name={user.name ? user.name : 'Nome não informado'} 
                             birthDate={moment(user.birthDate).format('DD/MM/YYYY')}
                             cpf={user.cpf}
-                            key={user.id}
-                            id={user._id}>
+                            key={user.id}>
                             </CardPaciente>
                         )
                     })}

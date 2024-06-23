@@ -9,7 +9,7 @@ export const Receitas = () => {
     // para pegar todos as receitas relacionado ao médico (pessoa logada)
     const { recipe } = useCallback(useFetchClientRecipes('api/recipe/get-recipes'));
     const handleClickToPDF = async (id) => {
-        const response = await GenericService.findAllList(`/api/pdf/generate-pdf/${id}`)
+        const response = await GenericService.findById('/api/pdf/generate-pdf', id)
         console.log(response)
     }
 

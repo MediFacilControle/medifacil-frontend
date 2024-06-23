@@ -3,7 +3,7 @@ import { Button } from '../button/button.jsx'
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom';
 
-export const CardPaciente = ({ name, birthDate, cpf, id }) => {
+export const CardPaciente = ({ name, birthDate, cpf }) => {
     const navigate = useNavigate();
 
     return (
@@ -14,7 +14,6 @@ export const CardPaciente = ({ name, birthDate, cpf, id }) => {
                 <p><span>Data de Nascimento: </span> {birthDate} </p>
 
                 <p><span>CPF: </span> {cpf} </p>
-                <p><span>id: </span> {id} </p>
             </CardPacienteInfo>
 
             <CardPacienteButtons>
@@ -40,5 +39,4 @@ CardPaciente.propTypes = {
     name: PropTypes.string.isRequired,
     birthDate: PropTypes.string.isRequired,
     cpf: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired
 }
