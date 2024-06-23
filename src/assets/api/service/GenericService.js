@@ -3,7 +3,6 @@ import { authApi } from '../AxiosHttpClient';
 export class GenericService {
 
   static async findAll(route, params) {
-    console.log(authApi.defaults)
     try {
       return await authApi.get(`${route}?${params}`);
 

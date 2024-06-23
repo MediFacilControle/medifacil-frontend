@@ -28,12 +28,14 @@ export const Login = () => {
           cpf: formData.cpf,
           password: formData.password
         });
-        console.log('login response:', response);
+
         if ((response.status === 200 || response.status === 204) && response.data.token) {
-          console.log('User logado com sucesso', response);
-          navigate('/home');
+          setTimeout(() => navigate('/home'), 1000);
+          console.log('passou aqui no if')
+
         } else {
           setError('Erro ao logar o usuário. Tente novamente.');
+          
         }
       } catch (error) {
         console.error('Erro ao logar o usuário:', error);
