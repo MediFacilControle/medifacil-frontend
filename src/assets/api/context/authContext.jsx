@@ -12,23 +12,28 @@ export const AuthProvider = ({ children }) => {
     const [idUser, setIdUser] = useState(null);
 
     useEffect(() => {
-        const token = localStorage.getItem('@auth:token');
-        setIsLogged(!!token); 
-        if (token) {
-            const decodedToken = jwtDecode(token);
-            setIdUser(decodedToken.userId); // Supondo que o ID do usuário esteja no campo `userId` do token decodificado
+        const loadinStoredData = async () => {
+            const token = localStorage.getItem('@auth:token');
+            if (token) {
+                const decodedToken = jwtDecode(token);
+                setIdUser(decodedToken.userId)
+            }
         }
-    }, []);
+        loadinStoredData();
+    }, [isLogged]);
 
     const UserLogin = async ({ cpf, password }) => {
         try {
             const response = await GenericService.create('auth/login-cpf', { cpf, password });
             if ((response.status === 200 || response.status === 204) && response.data) {
-                setUser(response.data); 
-                localStorage.setItem('@auth:token', response.data.token); 
+                setUser(response.data);
+                localStorage.setItem('@auth:token', response.data.token);
                 const decodedToken = jwtDecode(response.data.token);
-                setIdUser(decodedToken.userId); 
-                setTimeout( () => Logout(), 3600000); // Desloga o usuário após 1 hora
+                setIdUser(decodedToken.userId);
+                
+                setIsLogged(true);
+                
+                setTimeout(Logout, 3600000); 
                 return response;
             } else {
                 throw new Error('Falha em logar o user');
@@ -39,10 +44,10 @@ export const AuthProvider = ({ children }) => {
     };
 
     const Logout = () => {
-        setUser(null); // Limpa os dados do usuário do estado local
-        localStorage.removeItem('@auth:token'); // Remove os dados do usuário do localStorage
-        setIsLogged(false); // Define que o usuário não está autenticado
-        setIdUser(null); 
+        setUser(null);
+        localStorage.removeItem('@auth:token');
+        setIsLogged(false);
+        setIdUser(null);
     };
 
 
