@@ -8,10 +8,17 @@ import { GenericService } from "../../assets/api/service/GenericService";
 export const Receitas = () => {
     // para pegar todos as receitas relacionado ao médico (pessoa logada)
     const { recipe } = useCallback(useFetchClientRecipes('api/recipe/get-recipes'));
+    
     const handleClickToPDF = async (id) => {
-        const response = await GenericService.findById('/api/pdf/generate-pdf', id)
-        console.log(response)
-    }
+        try {
+          const response = await GenericService.findRecipeById('api/pdf/generate-pdf', id);
+          console.log('PDF generated:', response);
+          // Aqui você pode fazer algo com a resposta, como abrir um link para download do PDF, etc.
+        } catch (error) {
+          console.error('Error handling PDF generation:', error);
+          // Trate o erro conforme necessário, por exemplo, exibindo uma mensagem de erro para o usuário
+        }
+      };
 
     return (
         <PrimaryLayout>

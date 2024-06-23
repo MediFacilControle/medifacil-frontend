@@ -49,6 +49,15 @@ export class GenericService {
     // }
   }
 
+  static async findRecipeById(route, id) {
+    console.log(authApi.get(`/${route}/${id}`))
+    try {
+      return await authApi.get(`/${route}/${id}`);
+    } catch (e) {
+      return e.response;
+    }
+  }
+
   static async create(route, entity, headers) {
     try {
       return await authApi.post(`/${route}`, entity, {
