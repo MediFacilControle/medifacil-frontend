@@ -10,6 +10,7 @@ export const Login = () => {
   const [formData, setFormData] = useState({ cpf: '', password: '' });
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const navigate = useNavigate();
   const { UserLogin, isLogged } = useContext(AuthContext);
@@ -29,8 +30,7 @@ export const Login = () => {
         });
 
         if ((response.status === 200 || response.status === 204) && response.data.token) {
-          setTimeout(() => navigate('/home'), 1000);
-
+          setSuccess('Usuário logado com sucesso!');
         } else {
           setError('Erro ao logar o usuário. Tente novamente.');
           
@@ -83,6 +83,7 @@ export const Login = () => {
             />
           </ButtonsContainer>
 
+          {success && <Alert severity='success'>{success}</Alert>}
           {error && <Alert severity='error'>{error}</Alert>}
         </LoginForm>
       </LoginContainer>
