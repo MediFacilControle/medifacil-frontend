@@ -3,25 +3,27 @@ import LogoSm from '../../assets/logo-sm.png'
 import { Button } from '../button/button.jsx';
 import { useContext } from 'react';
 import { AuthContext } from '../../assets/api/context/authContext.jsx';
+import { useNavigate } from 'react-router-dom';
 
 export const Navbar = () => {
   const { isLogged, Logout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   return (
     <NavContainer>
       <div>
-        <a href="/home">
+        <a onClick={() => navigate('/home')}>
           <img src={LogoSm} alt="" />
         </a>
       </div>
       <NavList>
-        <a href="/home">
+        <a onClick={() => navigate('/home')}>
           <li>Home</li>
         </a>
-        <a href="/receitas">
+        <a onClick={() => navigate('/receitas')}>
           <li>Receitas</li>
         </a>
-        <a href="/cadastro-receita">
+        <a onClick={() => navigate('/cadastro-receita')}>
           <li>Cadastrar Receitas</li>
         </a>
 
